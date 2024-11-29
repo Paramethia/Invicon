@@ -68,7 +68,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         <Link to="/home" className="flex items-center text-white gap-2 rounded-md px-3 py-2 font-helvetica transition-colors H-effect" style={{ textDecoration: 'none' }}>
           <HomeIcon className="h-4 w-4" /> Home
         </Link>
-        <Link to="/leaks" className="flex items-center text-white  gap-2 rounded-md px-3 py-2 font-helvetica transition-colors H-effect" style={{ textDecoration: 'none' }}>
+        <Link to="/rewards" className="flex items-center text-white  gap-2 rounded-md px-3 py-2 font-helvetica transition-colors H-effect" style={{ textDecoration: 'none' }}>
             <CameraIcon className="h-4 w-4" /> Leaks
         </Link>
         <Link to="/dashboard" className="flex text-white items-center gap-2 rounded-md px-3 py-2 font-helvetica transition-colors H-effect" style={{ textDecoration: 'underline' }}>
@@ -184,7 +184,7 @@ const Dashboard = () => {
                         <Link to="/home" style={{ textDecoration: 'none' }} className="Logo flex-1">
                             <div className="text-white flex items-center gap-2 justify-center md:justify-start">
                                 <img src="Invicon top bar logo.png" alt="Invicon Logo" className="w-8 h-8" />
-                                <h1 className="text-2xl font-bold font-helvetica">Leakon</h1>
+                                <h1 className="text-2xl font-bold font-helvetica"> Invicon </h1>
                             </div>
                         </Link>
                         <div className="Theme">
