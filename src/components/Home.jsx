@@ -73,7 +73,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                 <Link to="/dashboard" className="flex text-white items-center gap-2 rounded-md px-3 py-2 font-helvetica transition-colors H-effect" style={{ textDecoration: 'none' }}>
                     <UsersIcon className="h-4 w-4" /> Dashboard
                 </Link>
-                <Link to="/leaks" className="flex items-center text-white  gap-2 rounded-md px-3 py-2 font-helvetica transition-colors H-effect" style={{ textDecoration: 'none' }}>
+                <Link to="/rewards" className="flex items-center text-white  gap-2 rounded-md px-3 py-2 font-helvetica transition-colors H-effect" style={{ textDecoration: 'none' }}>
                     <GiftIcon className="h-4 w-4" /> Rewards
                 </Link>
                 <Link to="/login" onClick={logOut} className="flex text-white items-center gap-2 rounded-md px-3 py-2 font-helvetica transition-colors H-effect" style={{ textDecoration: 'none' }}>
@@ -231,16 +231,16 @@ const PaymentOptions = ({ onClose }) => {
                 <h2 className="text-lg font-bold text-gray-700 dark:text-white mb-4 text-center">Select Payment Method</h2>
                 <div className="grid gap-4">
                     <a href="https://www.paypal.com/paypalme/KyrinKompi" target="_blank">
-                        <button className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600" onClick={ppBuying}> <FaPaypal className="w-6 h-6 mr-2 inline" /> PayPal </button>
+                        <button className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"> <FaPaypal className="w-6 h-6 mr-2 inline" /> PayPal </button>
                     </a>
                     <p className="text-xs text-black">
                         <span className="font-bold">NOTE:</span> Ensure you include a message with your username when sending the money.
                     </p>
                     <a href="https://www.instagram.com/poison8x/profilecard/?igsh=MWRnejFnNzRwN3U3OA==" target="_blank">
-                       <button className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600" onClick={bitBuying}> <FaBitcoin className="w-6 h-6 mr-2 inline" /> Crypto </button>
+                       <button className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"> <FaBitcoin className="w-6 h-6 mr-2 inline" /> Crypto </button>
                     </a>
                     <a href="https://www.instagram.com/poison8x/profilecard/?igsh=MWRnejFnNzRwN3U3OA==">
-                       <button className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600" onClick={otherBuying}> <FaWallet className="w-6 h-6 mr-2 inline" /> Other </button>
+                       <button className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"> <FaWallet className="w-6 h-6 mr-2 inline" /> Other </button>
                     </a>
                 </div>
             </div>
@@ -468,36 +468,32 @@ const Home = () => {
                         {showAllT === true && ( <h2 className="text-2xl text center text-gray-500" style={{ color: isDarkMode ? '#ffffff' : '#1a202c' }}> First tier: </h2> )}
                         {(selectedTier === "Tier 1" || showAllT) && (
                         <ul>
-                            <li> <a href="https://www.instagram.com/esterbron/?hl=en" target="_blank">Esterbron</a> & <a href="https://x.com/theonlybiababy?t=qu9m07ToBYHTUH7JaXXp4A&s=09" target="_blank">theonlybiababy</a> OF leaks. </li>
-                            <li> 442MB folder of leaked OF images. </li>
-                            <li> 4GB+ folder of leaked OF videos. </li>
+                            <li> Something small but nice </li>
+                            <li> 4GB+ folder </li>
                         </ul>
                         )}
                         {showAllT === true && ( <h2 className="text-2xl text center text-gray-500" style={{ color: isDarkMode ? '#ffffff' : '#1a202c' }}> Second tier: </h2> )}
                         {(selectedTier === "Tier 2" || showAllT) && (
                         <ul>
                             <li> Tier 1 reward (4.4GB)</li>
-                            <li> <a href="https://www.tiktok.com/@dreamy_moo?lang=en" target="_blank">dreamymoo</a>, <a href="https://www.instagram.com/melztube/?hl=en" target="_blank">melztube</a> & <a href="https://www.instagram.com/kennamatta?igsh=N256cXNiM2k5aTFw" target="_blank">Kenna Matta</a> leaks. </li>
-                            <li> 964MB folder of leaked images. </li>
-                            <li> 8GB+ folder of leaked videos. </li>
+                            <li> Something big </li>
+                            <li> 8GB+ folder </li>
                         </ul>
                         )}
                         {showAllT === true && ( <h2 className="text-2xl text center text-gray-500" style={{ color: isDarkMode ? '#ffffff' : '#1a202c' }}> Three tier: </h2> )}
                         {(selectedTier === "Tier 3" || showAllT) && (
                         <ul>
-                            <li> Tier 1 & 2 rewards (13.9GB) </li>
-                            <li> <a href="https://www.instagram.com/AriKytsya/" target="_blank">Ari Kytsya</a>, <a href="https://www.instagram.com/puppiwii/?hl=en" target="_blank">puppiwii</a> & <a href="https://www.instagram.com/_hannah_0w0/?hl=en" target="_blank">hannah_owo</a>. </li>
-                            <li> 1.4 folder of leaked images. </li>
-                            <li> 16GB+ folder of leaked videos. </li>
+                            <li> Tier 1 & 2 rewards </li>
+                            <li> Something bigger </li>
+                            <li> 14GB+ folder </li>
                         </ul>
                         )}
                         {showAllT === true && ( <h2 className="text-2xl text center text-gray-500" style={{ color: isDarkMode ? '#ffffff' : '#1a202c' }}> Fourth tier: </h2> )}
                         {(selectedTier === "Tier 4" || showAllT) && (    
                         <ul>
                             <li> All above rewards (30.7GB) </li>
-                            <li> <a href="https://www.instagram.com/soogsx__/?hl=en" target="_blank">Soogsx</a>, <a href="https://www.instagram.com/breckiehill/?hl=en" target="_blank">Breckie Hill</a>, <a href="https://www.instagram.com/addisonivvy/?hl=en" target="_blank">Addison Ivy</a> & alot more </li>
-                            <li> 2.1GB folder of leaked images </li>
-                            <li> 17GB+ folder of leaked videos. </li>
+                            <li> Something much bigger </li>
+                            <li> 17GB+ </li>
                         </ul>
                         )}
 
