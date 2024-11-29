@@ -68,11 +68,11 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         <Link to="/home" className="flex items-center text-white gap-2 rounded-md px-3 py-2 font-helvetica transition-colors H-effect" style={{ textDecoration: 'none' }}>
           <HomeIcon className="h-4 w-4" /> Home
         </Link>
-        <Link to="/rewards" className="flex items-center text-white  gap-2 rounded-md px-3 py-2 font-helvetica transition-colors H-effect" style={{ textDecoration: 'none' }}>
-            <CameraIcon className="h-4 w-4" /> Leaks
-        </Link>
         <Link to="/dashboard" className="flex text-white items-center gap-2 rounded-md px-3 py-2 font-helvetica transition-colors H-effect" style={{ textDecoration: 'underline' }}>
           <UsersIcon className="h-4 w-4" /> Dashboard
+        </Link>
+          <Link to="/rewards" className="flex items-center text-white  gap-2 rounded-md px-3 py-2 font-helvetica transition-colors H-effect" style={{ textDecoration: 'none' }}>
+            <CameraIcon className="h-4 w-4" /> Rewards
         </Link>
         <Link to="/login" onClick={logOut} className="flex text-white items-center gap-2 rounded-md px-3 py-2 font-helvetica transition-colors H-effect" style={{ textDecoration: 'none' }}>
             <LoutIcon className="h-4 w-4" /> Log out
