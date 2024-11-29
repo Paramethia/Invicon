@@ -134,7 +134,7 @@ const PaymentOptions = ({ onClose }) => {
 
 const Rewards = () => {
   const navigate = useNavigate();
-  const { username } = useContext(UserContext);
+  let { username } = useContext(UserContext);
   const storedUsername = localStorage.getItem("username");
   const [currentTier, setCurrentTier] = useState(0);
   const [isDarkMode, setIsDarkMode] = useState(true);
