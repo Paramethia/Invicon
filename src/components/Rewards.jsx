@@ -19,8 +19,14 @@ const Header = () => {
 };
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
+  let {username} = useContext(UserContext);
+  let storedUsername = localStorage.getItem("username");
   let inviteLink = localStorage.getItem('inviteLink');
   let code = inviteLink.slice(-8);
+
+  if (storedUsername) username = storedUsername;
+
+  const logOut = () => { localStoarge.removeItem("username") }
 
   const handleCopyReferralCode = () => {
     navigator.clipboard.writeText(inviteLink);
@@ -53,8 +59,8 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       <div className="flex static justify-between items-center mb-6">
         <Link to="/home" style={{ textDecoration: 'none' }}>
           <div className="text-white flex items-center gap-2">
-            <img src="https://res.cloudinary.com/dw7w2at8k/image/upload/v1721763323/00f6d818-53e4-43fd-819d-1efb5932af3c-removebg-preview_jwgmzt.png" alt="Invicon Logo" className="w-8 h-8" />
-            <h1 className="text-xl font-bold mt-2 font-helvetica">Invicon</h1>
+            <img src="Invicon navbar logo.png" alt="Invicon Logo" className="w-8 h-8" />
+            <h1 className="text-xl font-bold mt-2 font-helvetica">{username}</h1>
           </div>
         </Link>
         <button className="md:hidden" onClick={toggleSidebar}>
@@ -71,6 +77,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         </Link>
         <Link to="/rewards" className="flex items-center text-white gap-2 rounded-md px-3 py-2 font-helvetica transition-colors H-effect" style={{ textDecoration: 'underline' }}>
           <GiftIcon className="h-4 w-4" /> Rewards
+        </Link>
+          <Link to="/login" onClick={logOut} className="flex text-white items-center gap-2 rounded-md px-3 py-2 font-helvetica transition-colors H-effect" style={{ textDecoration: 'none' }}>
+            <LoutIcon className="h-4 w-4" /> Log out
         </Link>
       </nav>
 
@@ -126,6 +135,7 @@ const PaymentOptions = ({ onClose }) => {
 const Rewards = () => {
   const navigate = useNavigate();
   const { username } = useContext(UserContext);
+  const storedUsername = localStorage.getItem("username");
   const [currentTier, setCurrentTier] = useState(0);
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -136,7 +146,7 @@ const Rewards = () => {
   const [spoilers, setSpoilers] = useState([]);
   const [isPaymentConOpen, setIsPaymentConOpen] = useState(false);
 
-  let moan = new Audio('https://res.cloudinary.com/doxalk3ms/video/upload/v1724628435/ahh_sound_effect_gukkzc.mp4');
+  if (storedUsername) username = storedUsername;
 
   let NotLogged = () => {
         toast.error("You are not logged in.", {
@@ -272,25 +282,31 @@ const Rewards = () => {
                   <center>
                     {[1, 2, 3, 4].map((tier) => (
                       currentTier >= tier && (
-                      <a
-                        key={tier}
-                        href={rewardLinks[tier]}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-center bg-[#282434] text-white font-bold py-2 px-4 rounded transition-colors hover:bg-[#3c3a4e]"
-                      >
-                        <button id="reward-button" className="bg-gray-500 hover:bg-blue-500 dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 rounded-md">
-                          🔓 Get tier {tier} reward
-                        </button>
-                      </a>
+
+                      <div key={tier} className="Tier-reward text-center shadow rounded-lg p-6 flex flex-col">
+                        <h2 className="text-lg font-bold text-2xl text-green-600"> Tier {tier} unlocked 🔓 </h2>
+                        <p className="text-gray-500 font-semibold dark:text-gray-400"> Download your reward </p>
+                        <p className="text-gray-500 dark:text-gray-400"> or watch it online </p>
+                        <a
+                          href={rewardLinks[tier]}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-center bg-[#282434] text-white font-bold py-2 px-4 rounded transition-colors hover:bg-[#3c3a4e]"
+                        >
+                            <button id="reward-button" className="bg-gray-500 hover:bg-blue-500 dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 rounded-md" onMouseOver={() => playMoan() }>
+                                Claim reward
+                            </button>
+                        </a>
+                      </div>
+
                     )))}
 
-                    {currentTier < 4 && (
-                        <button className="bg-gray-500 hover:bg-blue-500 dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 rounded-md" onClick={payOptionsOpen}>
+                    {currentTier < 8 && (
+                        <button id="tier-buy-button" className="bg-gray-500 hover:bg-blue-500 dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 rounded-md" onClick={payOptionsOpen}>
                           Buy a tier 🧧
                         </button>
                     )}
-                  </center>
+                </center>
               </div>
             </div>
           </div>
