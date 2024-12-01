@@ -55,7 +55,7 @@ const Register = () => {
 
         // Check for spaces or invalid characters in the username
         if (!usernameVal.test(username)) {
-            setUsernameError("Username can only contain letters, numbers, underscores, or periods.");
+            setUsernameError("Username cannot have empty spaces, emojis, or other invalid characters.");
             return;
         } else {
             setUsernameError(''); // Clear the error if the username is valid
@@ -85,7 +85,7 @@ const Register = () => {
             axios.post('https://invicon-back-end.onrender.com/register', requestBody)
             .then(result => {
                 if (result.data === "Account already registered.") {
-                    toast.warn("Already registered, pal. Go log in", {
+                    toast.warn("You have already registered. Go log in.", {
                         position: "top-center",
                         autoClose: 4000,
                         hideProgressBar: false,
@@ -98,7 +98,7 @@ const Register = () => {
                     });
                     setTimeout(() => {
                         navigate('/login');
-                    }, 4400);
+                    }, 4000);
                 } else if (result.data === "Username already taken.") {
                     setUsernameError("Username already in use.")
                 } else if (result.data === "Registered.") {
@@ -137,8 +137,7 @@ const Register = () => {
         <ToastContainer />
 
         <div className="flex h-screen overflow-hidden">
-            <div className="hidden md:flex items-center justify-center md:w-1/2 bg-auto bg-black" style={{ backgroundImage: 'url(https://res.cloudinary.com/dbdh6zbvt/image/upload/v1732908359/Invicon_register_log_in_image_p3tfoh.png)', 
-                 backgroundSize: 'cover', backgroundPosition: 'center', backfaceVisibility: 'hidden', backgroundRepeat: 'no-repeat', backgroundAttachment: 'fixed' }}>
+            <div className="hidden md:flex items-center justify-center md:w-1/2 bg-auto bg-black" style={{ backgroundImage: 'url(https://res.cloudinary.com/dbdh6zbvt/image/upload/v1732908359/Invicon_register_log_in_image_p3tfoh.png)' }}>
             </div>
             <div className="w-full md:w-1/2 flex flex-col items-center justify-center bg-gray-400">
                 <h1 className="block md:hidden mb-6 text-4xl font-bold text-dark">Invicon</h1>
