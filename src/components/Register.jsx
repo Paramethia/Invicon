@@ -8,12 +8,13 @@ import { useNavigate } from 'react-router-dom';
 import { UserContext } from './UserContext';
 import { toast, ToastContainer, Bounce, Flip, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import './Register.css';
 
 const Header = () => {
     return ( 
         <Helmet>
-            <title> Invicon - register </title>
+            <title> Leakon - register </title>
         </Helmet>
     );
 };
@@ -25,6 +26,7 @@ const Register = () => {
     const {username, setName} = useContext(UserContext);
     const {email, setEmail} =  useContext(UserContext);
     const [password, setPassword] = useState('');
+    let [passwordVisible, setPasswordVisible] = useState(false);
     const [usernameError, setUsernameError] = useState('');
     const navigate = useNavigate();
 
@@ -33,13 +35,17 @@ const Register = () => {
     
         setTimeout(() => {
             note.style.display = 'none'
-        }, 3800 );
+        }, 4800 );
     });
     
     // To check if the user already has an account on the device to prevent creating and inviting multiple acccount on the same device.
 
-    let alreadyReg = localStorage.getItem("username");
+    let alreadyReg = localStorage.getItem("username") || localStorage.getItem("inviteLink");
     let [warning, setWarning] = useState("");
+
+    const togglePasswordVisibility = () => {
+        setPasswordVisible(!passwordVisible);
+    };
 
     const handleRegister = (event) => {
         event.preventDefault();
@@ -56,10 +62,10 @@ const Register = () => {
         }
 
         if (alreadyReg) {
-            setWarning("Don't create another account while already registered on this device! Fucking log in or reset your password if you forgot!!");
+            setWarning("You cannot create another account while already registered on this device. Log in or reset your password if you forgot.");
             setTimeout(() => {
                 navigate('/login');
-            }, 5800);
+            }, 5000);
         } else if (usedInvite != null && alreadyReg) {
             setWarning("You cannot use invite links if you already registered on this device.");
             setTimeout(() => {
@@ -131,7 +137,9 @@ const Register = () => {
         <ToastContainer />
 
         <div className="flex h-screen overflow-hidden">
-            <div className="hidden md:block md:w-1/2 bg-auto" style={{ backgroundImage: 'url(https://res.cloudinary.com/dbdh6zbvt/image/upload/v1732908359/Invicon_register_log_in_image_p3tfoh.png)' }}></div>
+            <div className="hidden md:flex items-center justify-center md:w-1/2 bg-auto bg-black" style={{ backgroundImage: 'url(https://res.cloudinary.com/dbdh6zbvt/image/upload/v1732908359/Invicon_register_log_in_image_p3tfoh.png)', 
+                 backgroundSize: 'cover', backgroundPosition: 'center', backfaceVisibility: 'hidden', backgroundRepeat: 'no-repeat', backgroundAttachment: 'fixed' }}>
+            </div>
             <div className="w-full md:w-1/2 flex flex-col items-center justify-center bg-gray-400">
                 <h1 className="block md:hidden mb-6 text-4xl font-bold text-dark">Invicon</h1>
                 <div className="bg-gray-300 p-8 rounded shadow-md w-3/4 animate__animated animate__fadeInRight">
@@ -168,12 +176,12 @@ const Register = () => {
                             />
                         </div>
                           <p Id="Email-note"> Ensure you remember your password if you don't put in your email. </p>
-                        <div className="mb-6 text-left">
+                        <div className="relative mb-6 text-left">
                             <label htmlFor="exampleInputPassword1" className="block text-sm font-bold mb-2">
                                 Password:
                             </label>
                             <input
-                                type="password"
+                                type={passwordVisible ? "text" : "password"}
                                 minlength="4"
                                 maxlength="17"
                                 placeholder="Create password"
@@ -182,12 +190,14 @@ const Register = () => {
                                 onChange={(event) => setPassword(event.target.value)}
                                 required
                             />
+                            <button type="button" className="absolute right-3 bottom-2 p-1" onClick={togglePasswordVisibility}>
+                                {passwordVisible ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
+                            </button>
                         </div>
                         {warning && <p className="text-red-500 text-sm mt-1">{warning}</p>}
-                        <button type="submit" className="w-full bg-dark text-white py-2 rounded-md transition duration-300 ease-in-out transform hover:scale-105"> Submit </button>
+                        <button type="submit" className="w-full bg-dark text-white py-2 rounded-md transition duration-300 ease-in-out transform hover:scale-105"> Register </button>
                     </form>
                     <p className="my-4 mx-2">Already have an account? <Link to='/login' className='text-dark'>Log in</Link></p>
-                    {/* <button onClick={clearCache} className="w-full bg-dark text-white py-2 rounded-md transition duration-300 ease-in-out transform hover:scale-105"> Clear cache </button> */}
                 </div>
             </div>
         </div>
