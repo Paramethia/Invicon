@@ -14,7 +14,7 @@ import './Register.css';
 const Header = () => {
     return ( 
         <Helmet>
-            <title> Leakon - register </title>
+            <title> Invicon - register </title>
         </Helmet>
     );
 };
