@@ -6,8 +6,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from './UserContext';
 import { toast, ToastContainer, Bounce } from 'react-toastify';
-import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import'react-toastify/dist/ReactToastify.css';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import './Login.css';
 
 const Header = () => {
@@ -25,44 +25,66 @@ const Login = () => {
     const navigate = useNavigate();
     let storedUsername = localStorage.getItem("username");
     const storedLink = localStorage.getItem("inviteLink");
+    let [responded, setResponded] = useState(false);
+    const [loading, setLoading] = useState(false);
+    let [seconds, setSeconds] =  useState(55);
 
     const togglePasswordVisibility = () => {
         setPasswordVisibility(!passwordVisible)
     }
 
-    const handleLogin = (event) => {
+    const handleLogin = async (event) => {
         event.preventDefault();
-        
-        axios.post('https://invicon-server-x4ff.onrender.com/login', { username, password })
-            .then(result => {
-                console.log('Server response:', result);
-                if (result.data === "Correct username and password.") {
-                    if (username != storedUsername) {
-                        localStorage.removeItem("username");
-                        localStorage.removeItem("inviteLink");
-                    }
-                    localStorage.setItem("username", username);
-                    navigate('/home');
-                } else {
-                    toast.error('Invalid username or password. Try again.', {
-                        position: "top-center",
-                        autoClose: 5000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "dark",
-                        transition: Bounce,
-                    });
-                }
-            })
-            .catch(err => {
-                console.error('Login error:', err);
-                toast.error('Login failed. Please try again later.');
+        const handleLogin = async (event) => {
+        event.preventDefault()
+        setLoading(true)
+        var timer = setInterval(() => {
+            if (responded) {
+                clearInterval(timer);
+                setLoading(false);
+            } else {
+                if (seconds > 0) seconds--;
+                setSeconds(seconds);
             }
-        );
-    }
+        }, 1000);
+        
+        try {
+            const response = await axios.post('https://invicon-server-x4ff.onrender.com/login', { username, password }, {withCredentials: true,})
+            console.log('Server response: ', response);
+            if (response.data === "Correct username and password.") {
+                if (username !== storedUsername) {
+                    localStorage.removeItem("username");
+                    localStorage.removeItem("inviteLink");
+                }
+                localStorage.setItem("username", username);
+                navigate('/home');
+            } else {
+                toast.error('Invalid username or password. Try again.', {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Bounce,
+                });
+            }
+        } catch(error) {
+            console.error('Error logging in: ', error);
+            toast.error('Login failed. Please try again later.', {
+                position: "top-center",
+                autoClose: 2700,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                transition: Bounce,
+            });
+        } finally { setResponded(true) }
 
     return (
         <>
@@ -76,46 +98,58 @@ const Login = () => {
             <div className="w-full md:w-1/2 flex flex-col items-center justify-center bg-gray-400">
                 <h1 className="block md:hidden mb-6 text-4xl font-bold text-dark"> Invicon </h1>
                 <div className="bg-gray-300 p-8 rounded shadow-md w-3/4 animate__animated animate__fadeInRight">
-                    <h3 className="mb-6 text-2xl font-bold  text-dark"> Log in </h3>
-                    <form onSubmit={handleLogin}>
-                        <div className="mb-4 text-left">
-                            <label htmlFor="exampleInputEmail1" className="block text-sm font-bold mb-2">
-                                Username:
-                            </label>
-                            <input
-                                type="text"
-                                maxlength="14"
-                                placeholder="Enter username"
-                                className="form-control block w-full bg-gray-200 px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                id="exampleInputEmail1"
-                                onChange={(event) => setName(event.target.value)}
-                                required
-                            />
-                        </div>
-                        <div className="relative mb-6 text-left">
-                            <label htmlFor="exampleInputPassword1" className="block text-sm font-bold mb-2">
-                                Password:
-                            </label>
-                            <input
-                                type={passwordVisible ? "text" : "password"}
-                                maxlength="17"
-                                placeholder="Enter password"
-                                className="form-control block w-full bg-gray-200 px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                id="exampleInputPassword1"
-                                onChange={(event) => setPassword(event.target.value)}
-                                required
-                            />
-                            <button type="button" className="absolute right-2 bottom-2 p-1" onClick={togglePasswordVisibility}>
-                                {passwordVisible ? <FaEyeSlash /> : <FaEye />}
-                            </button>
-                        </div>
-                        <button type="submit" className="w-full bg-dark text-white py-2 rounded-md hover:bg-dark transition duration-300 ease-in-out transform hover:scale-105"> Log in </button>
-                    </form>
-                   
-                  
-                 <p className="my-4  flex"> Don't have an account? <Link to='/register' className='text-dark mx-2'> Register </Link></p>
-                  <p><Link to='/request' className='text-dark'>I forgot the Password</Link></p>
-                       
+                    <!loading ? (
+                        <>
+                        <h3 className="mb-6 text-2xl font-bold  text-dark"> Log in </h3>
+                        <form onSubmit={handleLogin}>
+                            <div className="mb-4 text-left">
+                                <label htmlFor="exampleInputEmail1" className="block text-sm font-bold mb-2">
+                                    Username:
+                                </label>
+                                <input
+                                    type="text"
+                                    maxlength="14"
+                                    placeholder="Enter username"
+                                    className="form-control block w-full bg-gray-200 px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                    id="exampleInputEmail1"
+                                    onChange={(event) => setName(event.target.value)}
+                                    required
+                                />
+                            </div>
+                            <div className="relative mb-6 text-left">
+                                <label htmlFor="exampleInputPassword1" className="block text-sm font-bold mb-2">
+                                    Password:
+                                </label>
+                                <input
+                                    type={passwordVisible ? "text" : "password"}
+                                    maxlength="17"
+                                    placeholder="Enter password"
+                                    className="form-control block w-full bg-gray-200 px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                    id="exampleInputPassword1"
+                                    onChange={(event) => setPassword(event.target.value)}
+                                    required
+                                />
+                                <button type="button" className="absolute right-2 bottom-2 p-1" onClick={togglePasswordVisibility}>
+                                    {passwordVisible ? <FaEyeSlash /> : <FaEye />}
+                                </button>
+                            </div>
+                            <button type="submit" className="w-full bg-dark text-white py-2 rounded-md hover:bg-dark transition duration-300 ease-in-out transform hover:scale-105"> Log in </button>
+                        </form>
+                      
+                        <p className="my-4  flex"> Don't have an account? <Link to='/register' className='text-dark mx-2'> Register </Link></p>
+                        <p><Link to='/request' className='text-dark'>I forgot the Password</Link></p>
+                        </>
+                    ) : (
+                        <>
+                            <h4 className="mb-6 font-bold text-dark">Server is slow right now. Please wait a minute.</h4>
+                            <br />
+                            <center>
+                                <div className="loader"></div>
+                                <br />
+                                <p>{seconds}</p>
+                            </center>
+                        </>
+                    )}
                 </div>
             </div>           
         </div>
