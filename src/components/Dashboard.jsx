@@ -135,7 +135,7 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchInvitees = async () => {
             try {
-                const response = await axios.post('https://invicon-back-end.onrender.com/invites', { username });
+                const response = await axios.post('https://invicon-server-x4ff.onrender.com/invites', { username });
                 if (response.data.message === "No invites yet.") {
                     setInvitees([]);
                 } else {
