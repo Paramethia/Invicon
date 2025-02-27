@@ -35,8 +35,6 @@ const Login = () => {
 
     const handleLogin = async (event) => {
         event.preventDefault();
-        const handleLogin = async (event) => {
-        event.preventDefault()
         setLoading(true)
         var timer = setInterval(() => {
             if (responded) {
