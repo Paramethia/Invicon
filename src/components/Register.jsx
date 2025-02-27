@@ -50,7 +50,7 @@ const Register = () => {
         setPasswordVisible(!passwordVisible);
     };
 
-    const handleRegister = (event) => {
+    const handleRegister = async (event) => {
         event.preventDefault();
         setLoading(true)
         var timer = setInterval(() => {
@@ -97,7 +97,7 @@ const Register = () => {
             }
     
             try {
-                const response = await axios.post('https://leakon-server.onrender.com/register', requestBody, {withCredential: true})
+                const response = await axios.post('https://invicon-server-x4ff.onrender.com/register', requestBody, {withCredential: true})
                 if (response.data === "Account already registered.") {
                     toast.warn("Already registered, pal. Go log in", {
                         position: "top-center",
