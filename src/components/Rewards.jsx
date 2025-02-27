@@ -168,7 +168,7 @@ const Rewards = () => {
   useEffect(() => {
     const fetchTier = async () => {
         try {
-            const response = await axios.post('https://invicon-back-end.onrender.com/getTier', { username });
+            const response = await axios.post('https://invicon-server-x4ff.onrender.com/getTier', { username });
 
             if (response.data.message === "User found.") {
                 setCurrentTier(response.data.tier);
