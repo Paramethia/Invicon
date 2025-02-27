@@ -29,6 +29,9 @@ const Register = () => {
     let [passwordVisible, setPasswordVisible] = useState(false);
     const [usernameError, setUsernameError] = useState('');
     const navigate = useNavigate();
+    let [responded, setResponded] = useState(false);
+    const [loading, setLoading] = useState(false);
+    let [seconds, setSeconds] =  useState(55)
 
     useEffect(() => {
         let note = document.getElementById("Email-note");
@@ -49,6 +52,17 @@ const Register = () => {
 
     const handleRegister = (event) => {
         event.preventDefault();
+        setLoading(true)
+        var timer = setInterval(() => {
+            if (responded) {
+                clearInterval(timer);
+                loading(false);
+            } else {
+                if (seconds > 0) seconds--;
+                setSeconds(seconds);
+            }
+        }, 1000);
+
 
         // Regular expression to check for invalid characters in the username
         let usernameVal = /^[a-zA-Z0-9._]+$/;
@@ -82,10 +96,10 @@ const Register = () => {
                 requestBody.email = email;
             }
     
-            axios.post('https://invicon-server-x4ff.onrender.com/register', requestBody)
-            .then(result => {
-                if (result.data === "Account already registered.") {
-                    toast.warn("You have already registered. Go log in.", {
+            try {
+                const response = await axios.post('https://leakon-server.onrender.com/register', requestBody, {withCredential: true})
+                if (response.data === "Account already registered.") {
+                    toast.warn("Already registered, pal. Go log in", {
                         position: "top-center",
                         autoClose: 4000,
                         hideProgressBar: false,
@@ -98,30 +112,29 @@ const Register = () => {
                     });
                     setTimeout(() => {
                         navigate('/login');
-                    }, 4000);
-                } else if (result.data === "Username already taken.") {
+                    }, 4400);
+                } else if (response.data === "Username already taken.") {
                     setUsernameError("Username already in use.")
-                } else if (result.data === "Registered.") {
+                } else if (response.data === "Registered.") {
                     localStorage.setItem('usedInvite', usedInvite);
                     localStorage.setItem("username", username);
                     if (email) localStorage.setItem("email", email);
                     navigate('/home');
                 }
-            })
-            .catch(err => {
-                console.log(err);
+            } catch(error) {
+                console.log("Error registering: ", error);
                 toast.error("Registration failed. Please try again later.", {
                     position: "top-center",
                     autoClose: 4000,
-                    hideProgressBar: false,
+                    hideProgressBar: true,
                     closeOnClick: true,
-                    pauseOnHover: true,
+                    pauseOnHover: false,
                     draggable: true,
                     progress: undefined,
                     theme: "dark",
                     transition: Bounce,
                 });
-            });
+            } finally { setResponded(true) }
         }   
     }
   
@@ -137,66 +150,82 @@ const Register = () => {
         <ToastContainer />
 
         <div className="flex h-screen overflow-hidden">
-            <div className="hidden md:flex items-center justify-center md:w-1/2 bg-auto bg-black" style={{ backgroundImage: 'url(https://res.cloudinary.com/dbdh6zbvt/image/upload/v1732908359/Invicon_register_log_in_image_p3tfoh.png)' }}>
+            <div 
+                className="hidden md:flex items-center justify-center md:w-1/2 bg-auto bg-black" 
+                style={{ backgroundImage: 'url(https://res.cloudinary.com/dbdh6zbvt/image/upload/v1732908359/Invicon_register_log_in_image_p3tfoh.png)' }}>
             </div>
             <div className="w-full md:w-1/2 flex flex-col items-center justify-center bg-gray-400">
                 <h1 className="block md:hidden mb-6 text-4xl font-bold text-dark">Invicon</h1>
                 <div className="bg-gray-300 p-8 rounded shadow-md w-3/4 animate__animated animate__fadeInRight">
-                    <h3 className="mb-6 text-2xl font-bold text-dark">Register</h3>
-                    <form onSubmit={handleRegister}>
-                        <div className="mb-4 text-left">
-                            <label htmlFor="exampleInputName" className="block text-sm font-bold mb-2">
-                                Username:
-                            </label>
-                            <input
-                                type="text"
-                                minlength="3"
-                                maxlength="14"
-                                placeholder="Create username"
-                                className="form-control block w-full bg-gray-200 px-3 py-2 border border-gray-500 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                id="exampleInputName"
-                                onChange={(event) => setName(event.target.value)}
-                                required
-                            />
-                            {usernameError && <p className="text-red-500 text-sm mt-1">{usernameError}</p>}
-                        </div>
-                        <div className="mb-4 text-left">
-                            <label htmlFor="exampleInputEmai1" className="block text-sm font-bold mb-2">
-                                Email (optional):
-                            </label>
-                            <input
-                                type="email"
-                                minlengh="12"
-                                maxlength="35"
-                                placeholder="Enter email"
-                                className="form-control block w-full bg-gray-200 px-3 py-2 border border-gray-500 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                id="exampleInputEmail1"
-                                onChange={(event) => setEmail(event.target.value)}
-                            />
-                        </div>
-                          <p Id="Email-note"> Ensure you remember your password if you don't put in your email. </p>
-                        <div className="relative mb-6 text-left">
-                            <label htmlFor="exampleInputPassword1" className="block text-sm font-bold mb-2">
-                                Password:
-                            </label>
-                            <input
-                                type={passwordVisible ? "text" : "password"}
-                                minlength="4"
-                                maxlength="17"
-                                placeholder="Create password"
-                                className="form-control block w-full bg-gray-200 px-3 py-2 border border-gray-500 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                id="exampleInputPassword1"
-                                onChange={(event) => setPassword(event.target.value)}
-                                required
-                            />
-                            <button type="button" className="absolute right-3 bottom-2 p-1" onClick={togglePasswordVisibility}>
-                                {passwordVisible ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
-                            </button>
-                        </div>
-                        {warning && <p className="text-red-500 text-sm mt-1">{warning}</p>}
-                        <button type="submit" className="w-full bg-dark text-white py-2 rounded-md transition duration-300 ease-in-out transform hover:scale-105"> Register </button>
-                    </form>
-                    <p className="my-4 mx-2">Already have an account? <Link to='/login' className='text-dark'>Log in</Link></p>
+                    < !loading ? (
+                        <>
+                        <h3 className="mb-6 text-2xl font-bold text-dark">Register</h3>
+                        <form onSubmit={handleRegister}>
+                            <div className="mb-4 text-left">
+                                <label htmlFor="exampleInputName" className="block text-sm font-bold mb-2">
+                                    Username:
+                                </label>
+                                <input
+                                    type="text"
+                                    minlength="3"
+                                    maxlength="14"
+                                    placeholder="Create username"
+                                    className="form-control block w-full bg-gray-200 px-3 py-2 border border-gray-500 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                    id="exampleInputName"
+                                    onChange={(event) => setName(event.target.value)}
+                                    required
+                                />
+                                {usernameError && <p className="text-red-500 text-sm mt-1">{usernameError}</p>}
+                            </div>
+                            <div className="mb-4 text-left">
+                                <label htmlFor="exampleInputEmai1" className="block text-sm font-bold mb-2">
+                                    Email (optional):
+                                </label>
+                                <input
+                                    type="email"
+                                    minlengh="12"
+                                    maxlength="35"
+                                    placeholder="Enter email"
+                                    className="form-control block w-full bg-gray-200 px-3 py-2 border border-gray-500 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                    id="exampleInputEmail1"
+                                    onChange={(event) => setEmail(event.target.value)}
+                                />
+                            </div>
+                              <p Id="Email-note"> Ensure you remember your password if you don't put in your email. </p>
+                            <div className="relative mb-6 text-left">
+                                <label htmlFor="exampleInputPassword1" className="block text-sm font-bold mb-2">
+                                    Password:
+                                </label>
+                                <input
+                                    type={passwordVisible ? "text" : "password"}
+                                    minlength="4"
+                                    maxlength="17"
+                                    placeholder="Create password"
+                                    className="form-control block w-full bg-gray-200 px-3 py-2 border border-gray-500 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                    id="exampleInputPassword1"
+                                    onChange={(event) => setPassword(event.target.value)}
+                                    required
+                                />
+                                <button type="button" className="absolute right-3 bottom-2 p-1" onClick={togglePasswordVisibility}>
+                                    {passwordVisible ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
+                                </button>
+                            </div>
+                            {warning && <p className="text-red-500 text-sm mt-1">{warning}</p>}
+                            <button type="submit" className="w-full bg-dark text-white py-2 rounded-md transition duration-300 ease-in-out transform hover:scale-105"> Register </button>
+                        </form>
+                        <p className="my-4 mx-2">Already have an account? <Link to='/login' className='text-dark'>Log in</Link></p>
+                        </>
+                    ) : (
+                        <>
+                            <h4 className="mb-6 text-xl font-bold text-dark">Server is slow right now. Please wait a minute.</h4>
+                            <br />
+                            <center>
+                                <div className="loader"></div>
+                                <br />
+                                <p>{seconds}</p>
+                            </center>
+                        </>
+                    )}
                 </div>
             </div>
         </div>
