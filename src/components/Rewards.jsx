@@ -288,7 +288,7 @@ const Rewards = () => {
                         <p className="text-gray-500 font-semibold dark:text-gray-400"> Download your reward </p>
                         <p className="text-gray-500 dark:text-gray-400"> or watch it online </p>
                         <a
-                          //href={rewardLinks[index]}
+                          //href={rewardLinks[tier]}
                           //target="_blank"
                           //rel="noopener noreferrer"
                           className="text-center bg-[#282434] text-white font-bold py-2 px-4 rounded transition-colors hover:bg-[#3c3a4e]"
