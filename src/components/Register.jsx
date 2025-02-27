@@ -82,7 +82,7 @@ const Register = () => {
                 requestBody.email = email;
             }
     
-            axios.post('https://invicon-back-end.onrender.com/register', requestBody)
+            axios.post('https://invicon-server-x4ff.onrender.com/register', requestBody)
             .then(result => {
                 if (result.data === "Account already registered.") {
                     toast.warn("You have already registered. Go log in.", {
