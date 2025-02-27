@@ -98,7 +98,7 @@ const Login = () => {
             <div className="w-full md:w-1/2 flex flex-col items-center justify-center bg-gray-400">
                 <h1 className="block md:hidden mb-6 text-4xl font-bold text-dark"> Invicon </h1>
                 <div className="bg-gray-300 p-8 rounded shadow-md w-3/4 animate__animated animate__fadeInRight">
-                    <!loading ? (
+                    {!loading ? (
                         <>
                         <h3 className="mb-6 text-2xl font-bold  text-dark"> Log in </h3>
                         <form onSubmit={handleLogin}>
