@@ -6,7 +6,7 @@ import { UserContext } from './UserContext';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer, Bounce, Zoom, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { FiHome as HomeIcon, FiGift as GiftIcon, FiUsers as UsersIcon, FiMail as ConIcon, FiLogOut as LoutIcon,  FiCopy as CopyIcon } from 'react-icons/fi';
+import { FiHome as HomeIcon, FiGift as GiftIcon, FiUsers as UsersIcon, FiMail as ConIcon, FiLogOut as LoutIcon, FiLogIn as LinIcon, FiCopy as CopyIcon } from 'react-icons/fi';
 import { FaMoon, FaSun, FaBars, FaTimes, FaPaypal, FaBitcoin, FaWallet, FaTimesCircle, FaDiscord } from 'react-icons/fa';
 import './Extra styles.css';
 
@@ -21,11 +21,9 @@ const Header = () => {
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
     let {username} = useContext(UserContext);
-    let storedUsername = localStorage.getItem("username");
     let inviteLink = localStorage.getItem("inviteLink");
     let code = "ABC123";
     
-    if (storedUsername) username = storedUsername;
     if (inviteLink) code = inviteLink.slice(-8);
 
     const logOut = () => { localStorage.removeItem('username') }
@@ -76,9 +74,15 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                 <Link to="/rewards" className="flex items-center text-white  gap-2 rounded-md px-3 py-2 font-helvetica transition-colors H-effect" style={{ textDecoration: 'none' }}>
                     <GiftIcon className="h-4 w-4" /> Rewards
                 </Link>
-                <Link to="/login" onClick={logOut} className="flex text-white items-center gap-2 rounded-md px-3 py-2 font-helvetica transition-colors H-effect" style={{ textDecoration: 'none' }}>
-                    <LoutIcon className="h-4 w-4" /> Log out
-                </Link>
+                {username ? (
+                    <Link to="/login" onClick={logOut} className="flex text-white items-center gap-2 rounded-md px-3 py-2 font-helvetica transition-colors H-effect" style={{ textDecoration: 'none' }}>
+                        <LoutIcon className="h-4 w-4" /> Log out
+                    </Link>
+                ) : (
+                    <Link to="/login" className="flex text-white items-center gap-2 rounded-md px-3 py-2 font-helvetica transition-colors H-effect" style={{ textDecoration: 'none' }}>
+                        <LinIcon className="h-4 w-4" /> Log in
+                    </Link>
+                )}
             </nav>
             
             <center>
@@ -104,10 +108,11 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     );
 };
 
-const InviteLinkComponent = () => {
+const InviteLinkGeneration = () => {
     const [inviteLink, setInviteLink] = useState('');
     const [error, setError] = useState('');
     let {username} = useContext(UserContext);
+    const navigatetO = useNavigate();
 
     useEffect(() => {
        const existingLink = localStorage.getItem('inviteLink');
@@ -153,7 +158,7 @@ const InviteLinkComponent = () => {
             </div>
             <div className="Link-gen flex items-center justify-between">
                 {error && <p className="text-red-500">{error}</p>}
-                {!error && (
+                {!username ? (
                     <>
                     <div className="Link bg-gray-200 dark:bg-gray-800 rounded-md px-4 py-2 text-lg font-medium text-gray-700 dark:text-white">
                         {inviteLink} 
@@ -161,6 +166,11 @@ const InviteLinkComponent = () => {
                     <button id="copyB" onClick={handleCopy}>
                         Copy
                     </button>
+                    </>
+                ) : (
+                    <>
+                    <p className="text-orange-500"> You need to be signed in to genereate a link </p>
+                    <button id="log-inB" onClick={() => navigateTo('/login')}> Log in </button>
                     </>
                 )}
             </div>
@@ -171,7 +181,6 @@ const InviteLinkComponent = () => {
 };
 
 let InviteChecker = () => {
-    const navigateTo = useNavigate();
     const inviteId = localStorage.getItem("usedInvite");
     let {username} = useContext(UserContext);
     const storedUsername = localStorage.getItem('username');
@@ -179,28 +188,8 @@ let InviteChecker = () => {
     if (storedUsername) username = storedUsername;
     if (inviteId != null) console.log("Your registered using the invite code:", inviteId)
 
-    let notLogged = () => {
-        toast.error("You are not logged in!", {
-            position: "top-center",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-            transition: Bounce,
-        });
-        setTimeout(() => {
-            navigateTo('/login');
-        }, 3300)
-    }
-
     useEffect(() => {
-        if (!username) {
-            // If username is not set, then it assumes you are not logged in.
-            notLogged();
-        } else {
+        if (username) {
             const check = async () => {
                 try {
                     const response = await axios.post(`https://invicon-server-x4ff.onrender.com/invite-check`, { username, inviteId });
@@ -314,7 +303,7 @@ const Home = () => {
         };
             
         setTimeout(() => {
-            fetchInviteData()
+            if (username) fetchInviteData()
         }, 428);
     }, [username]);
 
@@ -396,12 +385,15 @@ const Home = () => {
                     </p>
                 </div> 
                 <div className="max-w-3xl mx-auto grid gap-6">
-                    <InviteLinkComponent />
+                    <InviteLinkGeneration />
                     <div className="Stats bg-white dark:bg-gray-800 shadow rounded-lg p-6">
                         { loading ? (
+                           <>
+                            <h2 className="text-xl font-semibold text-gray-700 dark:text-white"> { username ? "Waiting for server response..." : "Sign in to get your stats."} </h2>
                             <center>
                                 <div className="loader"></div>
                             </center>
+                            </>
                         ) : (
                          <>
                             <div className="mb-4">
@@ -500,10 +492,12 @@ const Home = () => {
                         <span onClick={tierShowance}> {showAllT ? '➖️' : '➕️'} </span>
                     </div>
 
-                    {tier < 4 && (
+                    {tier < 4 ? (
                         <h1 className="text-center dark:text-gray-300 text-gray-700 text-4xl" style={{ color: isDarkMode ? '#ffffff' : '#1a202c' }}>
                             Tier requirements
                         </h1>
+                    ) : (
+                        <br />
                     )}
 
                     {tier === 4 && (
