@@ -158,10 +158,7 @@ input:checked + .slider:before {
     padding: 0.5rem 1rem;
     border-radius: 5px;
 }
-#loginB { 
-    display: block;
-    width: 75px;
-}
+#loginB { width: 75px }
 
 #copyB:hover, #loginB:hover {
     background: #3b82f6;
