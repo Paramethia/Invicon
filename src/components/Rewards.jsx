@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { toast, ToastContainer, Bounce, Zoom } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { FiHome as HomeIcon, FiGift as GiftIcon, FiUsers as UsersIcon, FiLogOut as LoutIcon, FiMail as ConIcon, FiCopy as CopyIcon } from 'react-icons/fi';
+import { FiHome as HomeIcon, FiGift as GiftIcon, FiUsers as UsersIcon, FiLogOut as LoutIcon, FiLogIn as LinIcon, FiMail as ConIcon, FiCopy as CopyIcon } from 'react-icons/fi';
 import { FaMoon, FaSun, FaBars, FaTimes, FaPlay, FaPause, FaPaypal, FaBitcoin, FaWallet, FaTimesCircle } from 'react-icons/fa';
 import './Extra styles.css';
 
@@ -20,11 +20,8 @@ const Header = () => {
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
   let {username} = useContext(UserContext);
-  let storedUsername = localStorage.getItem("username");
   let inviteLink = localStorage.getItem('inviteLink');
   let code = inviteLink.slice(-8);
-
-  if (storedUsername) username = storedUsername;
 
   const logOut = () => { localStoarge.removeItem("username") }
 
@@ -64,23 +61,29 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           </div>
         </Link>
         <button className="md:hidden" onClick={toggleSidebar}>
-          <FaTimes className="h-6 w-6 text-white" />
+            <FaTimes className="h-6 w-6 text-white" />
         </button>
       </div>
 
       <nav className="Navigation flex flex-col gap-2 mb-10">
         <Link to="/home" className="flex items-center text-white gap-2 rounded-md px-3 py-2 font-helvetica transition-colors H-effect" style={{ textDecoration: 'none' }}>
-          <HomeIcon className="h-4 w-4" /> Home
+            <HomeIcon className="h-4 w-4" /> Home
         </Link>
         <Link to="/dashboard" className="flex text-white items-center gap-2 rounded-md px-3 py-2 font-helvetica transition-colors H-effect" style={{ textDecoration: 'none' }}>
-          <UsersIcon className="h-4 w-4" /> Dashboard
+            <UsersIcon className="h-4 w-4" /> Dashboard
         </Link>
         <Link to="/rewards" className="flex items-center text-white gap-2 rounded-md px-3 py-2 font-helvetica transition-colors H-effect" style={{ textDecoration: 'underline' }}>
-          <GiftIcon className="h-4 w-4" /> Rewards
+            <GiftIcon className="h-4 w-4" /> Rewards
         </Link>
-          <Link to="/login" onClick={logOut} className="flex text-white items-center gap-2 rounded-md px-3 py-2 font-helvetica transition-colors H-effect" style={{ textDecoration: 'none' }}>
-            <LoutIcon className="h-4 w-4" /> Log out
-        </Link>
+        {username ? (
+            <Link to="/login" onClick={logOut} className="flex text-white items-center gap-2 rounded-md px-3 py-2 font-helvetica transition-colors H-effect" style={{ textDecoration: 'none' }}>
+                <LoutIcon className="h-4 w-4" /> Log out
+            </Link>
+        ) : (
+            <Link to="/login" className="flex text-white items-center gap-2 rounded-md px-3 py-2 font-helvetica transition-colors H-effect" style={{ textDecoration: 'none' }}>
+                <LinIcon className="h-4 w-4" /> Log in
+            </Link>
+        )}
       </nav>
 
       <center>
@@ -133,9 +136,7 @@ const PaymentOptions = ({ onClose }) => {
 };
 
 const Rewards = () => {
-  const navigate = useNavigate();
   let { username } = useContext(UserContext);
-  const storedUsername = localStorage.getItem("username");
   const [currentTier, setCurrentTier] = useState(0);
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -145,25 +146,6 @@ const Rewards = () => {
   const lightModeStyles = { backgroundColor: '#ffffff' };
   const [spoilers, setSpoilers] = useState([]);
   const [isPaymentConOpen, setIsPaymentConOpen] = useState(false);
-
-  if (storedUsername) username = storedUsername;
-
-  let NotLogged = () => {
-        toast.error("You are not logged in.", {
-            position: "top-center",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-            transition: Bounce,
-        });
-        setTimeout(() => {
-            navigate('/login');
-        }, 3300)
-    }
 
   useEffect(() => {
     const fetchTier = async () => {
@@ -180,11 +162,8 @@ const Rewards = () => {
         }
     };
 
-    if (username) {
-        fetchTier();
-    } else {
-        NotLogged()
-    }
+    if (username) fetchTier();
+    
   }, [username]);
 
   const toggleTheme = () => {
