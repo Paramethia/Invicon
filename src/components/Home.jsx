@@ -112,7 +112,7 @@ const InviteLinkGeneration = () => {
     const [inviteLink, setInviteLink] = useState('');
     const [error, setError] = useState('');
     let {username} = useContext(UserContext);
-    const navigatetO = useNavigate();
+    const navigateTo = useNavigate();
 
     useEffect(() => {
        const existingLink = localStorage.getItem('inviteLink');
