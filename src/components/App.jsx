@@ -26,7 +26,7 @@ function App() {
       <UserContext.Provider value={{ username, setName, email, setEmail }}>
       <Router>
         <Routes>
-          <Route path="/" element={<Register />} />
+          <Route path="/" element={<Home />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/reset" element={<ResetPassword />} />
