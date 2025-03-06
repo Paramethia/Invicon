@@ -157,7 +157,7 @@ const InviteLinkGeneration = () => {
                 <p className="text-gray-500 dark:text-gray-400">Share this link with friends to earn rewards.</p>
             </div>
             <div className="Link-gen flex items-center justify-between">
-                {error && <p className="text-base text-red-500">{error}</p>}
+                {error && <p className="text-base text-red-500">Error generating invite link</p>}
                 {username ? (
                     <>
                     <div className="Link bg-gray-200 dark:bg-gray-800 rounded-md px-4 py-2 text-lg font-medium text-gray-700 dark:text-white">
@@ -169,7 +169,7 @@ const InviteLinkGeneration = () => {
                     </>
                 ) : (
                     <>
-                    <p id="No-login" className="text-base"> You need to be signed in to genereate a link </p>
+                    <p id="No-login" className="text-sm"> You need to be signed in to genereate a link </p>
                     <button id="loginB" onClick={() => navigateTo('/login')}> Log in </button>
                     </>
                 )}
