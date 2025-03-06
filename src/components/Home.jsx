@@ -169,8 +169,8 @@ const InviteLinkGeneration = () => {
                     </>
                 ) : (
                     <>
-                    <p className="text-orange-500"> You need to be signed in to genereate a link </p>
-                    <button id="log-inB" onClick={() => navigateTo('/login')}> Log in </button>
+                    <p className="text-base text-orange-400"> You need to be signed in to genereate a link </p>
+                    <button id="loginB" onClick={() => navigateTo('/login')}> Log in </button>
                     </>
                 )}
             </div>
