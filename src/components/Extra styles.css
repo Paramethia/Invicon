@@ -151,14 +151,15 @@ input:checked + .slider:before {
     color: #900604;
 }
 
-#copyB {
+#copyB, #loginB {
     background: #d1d5db;
     color: #1a202c;
     padding: 0.5rem 1rem;
     border-radius: 5px;
 }
+#loginB { display: block }
 
-#copyB:hover {
+#copyB:hover, #log-in:hover {
     background: #3b82f6;
 }
 
