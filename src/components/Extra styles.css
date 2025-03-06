@@ -151,6 +151,7 @@ input:checked + .slider:before {
     color: #900604;
 }
 
+#No-login { color: #db8a0f }
 #copyB, #loginB {
     background: #d1d5db;
     color: #1a202c;
