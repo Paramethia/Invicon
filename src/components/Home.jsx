@@ -253,19 +253,7 @@ const Home = () => {
     const [showAllT, setShowAllT] = useState(false);
     const [isPaymentConOpen, setIsPaymentConOpen] = useState(false);
 
-    if (invites >= 85 || tier === 7) {
-        requiredInvites = 100;
-        nextTier = 8;
-    } else if (invites >= 70 || tier === 6 ) {
-        requiredInvites = 85;
-        nextTier = 7;
-    } else if (invites >= 50 || tier === 5) {
-        requiredInvites = 70;
-        nextTier = 6;
-    } else if (invites >= 35 || tier === 4) {
-        requiredInvites = 50;
-        nextTier = 5;
-    } else if (invites >= 20 || tier === 3) {
+    if (invites >= 20 || tier === 3) {
         requiredInvites = 35;
         nextTier = 4;
     } else if (invites >= 10 || tier === 2) {
@@ -407,7 +395,7 @@ const Home = () => {
                                     <>You have invited <strong>{invites}</strong> person.</>
                                   )}
                                 </p>
-                                {tier < 8 && (
+                                {tier < 4 && (
                                     <>
                                        <p className="text-gray-500 dark:text-gray-400">You need <strong>{requiredInvites}</strong> more {requiredInvites === 1 ? "invite" : "invites"} to get to tier <strong>{nextTier}</strong> </p>
                                         
