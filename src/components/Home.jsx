@@ -158,7 +158,7 @@ const InviteLinkGeneration = () => {
             </div>
             <div className="Link-gen flex items-center justify-between">
                 {error && <p className="text-red-500">{error}</p>}
-                {!username ? (
+                {username ? (
                     <>
                     <div className="Link bg-gray-200 dark:bg-gray-800 rounded-md px-4 py-2 text-lg font-medium text-gray-700 dark:text-white">
                         {inviteLink} 
