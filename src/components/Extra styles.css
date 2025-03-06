@@ -159,7 +159,7 @@ input:checked + .slider:before {
 }
 #loginB { display: block }
 
-#copyB:hover, #log-in:hover {
+#copyB:hover, #loginB:hover {
     background: #3b82f6;
 }
 
