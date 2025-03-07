@@ -21,7 +21,9 @@ const Header = () => {
 const Sidebar = ({ isOpen, toggleSidebar }) => {
   let {username} = useContext(UserContext);
   let inviteLink = localStorage.getItem('inviteLink');
-  let code = inviteLink.slice(-8);
+  let code = "ABC123";
+      
+  if (inviteLink) inviteLink.slice(-8);
 
   const logOut = () => { localStorage.removeItem("username") }
 
