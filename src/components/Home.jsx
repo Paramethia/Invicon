@@ -183,9 +183,7 @@ const InviteLinkGeneration = () => {
 let InviteChecker = () => {
     const inviteId = localStorage.getItem("usedInvite");
     let {username} = useContext(UserContext);
-    const storedUsername = localStorage.getItem('username');
 
-    if (storedUsername) username = storedUsername;
     if (inviteId != null) console.log("Your registered using the invite code:", inviteId)
 
     useEffect(() => {
