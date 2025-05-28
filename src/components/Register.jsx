@@ -56,7 +56,7 @@ const Register = () => {
         var timer = setInterval(() => {
             if (responded) {
                 clearInterval(timer);
-                loading(false);
+                setLoading(false);
             } else {
                 if (seconds > 0) seconds--;
                 setSeconds(seconds);
@@ -167,8 +167,8 @@ const Register = () => {
                                 </label>
                                 <input
                                     type="text"
-                                    minlength="3"
-                                    maxlength="14"
+                                    minLength="3"
+                                    maxLength="14"
                                     placeholder="Create username"
                                     className="form-control block w-full bg-gray-200 px-3 py-2 border border-gray-500 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                     id="exampleInputName"
@@ -183,23 +183,23 @@ const Register = () => {
                                 </label>
                                 <input
                                     type="email"
-                                    minlengh="12"
-                                    maxlength="35"
+                                    minLengh="12"
+                                    maxLength="35"
                                     placeholder="Enter email"
                                     className="form-control block w-full bg-gray-200 px-3 py-2 border border-gray-500 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                     id="exampleInputEmail1"
                                     onChange={(event) => setEmail(event.target.value)}
                                 />
                             </div>
-                              <p Id="Email-note"> Ensure you remember your password if you don't put in your email. </p>
+                              <p id="Email-note"> Ensure you remember your password if you don't put in your email. </p>
                             <div className="relative mb-6 text-left">
                                 <label htmlFor="exampleInputPassword1" className="block text-sm font-bold mb-2">
                                     Password:
                                 </label>
                                 <input
                                     type={passwordVisible ? "text" : "password"}
-                                    minlength="4"
-                                    maxlength="17"
+                                    minLength="4"
+                                    maxLength="17"
                                     placeholder="Create password"
                                     className="form-control block w-full bg-gray-200 px-3 py-2 border border-gray-500 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                     id="exampleInputPassword1"
