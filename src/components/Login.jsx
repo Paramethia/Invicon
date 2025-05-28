@@ -35,7 +35,7 @@ const Login = () => {
 
     const handleLogin = async (event) => {
         event.preventDefault();
-        setLoading(true)
+        setLoading(true);
         var timer = setInterval(() => {
             if (responded) {
                 clearInterval(timer);
@@ -97,7 +97,7 @@ const Login = () => {
             <div className="w-full md:w-1/2 flex flex-col items-center justify-center bg-gray-400">
                 <h1 className="block md:hidden mb-6 text-4xl font-bold text-dark"> Invicon </h1>
                 <div className="bg-gray-300 p-8 rounded shadow-md w-3/4 animate__animated animate__fadeInRight">
-                    {!loading ? (
+                    { !loading ? (
                         <>
                         <h3 className="mb-6 text-2xl font-bold  text-dark"> Log in </h3>
                         <form onSubmit={handleLogin}>
@@ -107,7 +107,7 @@ const Login = () => {
                                 </label>
                                 <input
                                     type="text"
-                                    maxlength="14"
+                                    maxLength="14"
                                     placeholder="Enter username"
                                     className="form-control block w-full bg-gray-200 px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                     id="exampleInputEmail1"
@@ -121,7 +121,7 @@ const Login = () => {
                                 </label>
                                 <input
                                     type={passwordVisible ? "text" : "password"}
-                                    maxlength="17"
+                                    maxLength="17"
                                     placeholder="Enter password"
                                     className="form-control block w-full bg-gray-200 px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                     id="exampleInputPassword1"
