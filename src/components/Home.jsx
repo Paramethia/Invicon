@@ -120,7 +120,7 @@ const InviteLinkGeneration = () => {
        } else {
            const fetchInviteLink = async () => {
              try {
-                const response = await axios.post('http://invicon-server-x4ff.onrender.com/generate-invite', {username});
+                const response = await axios.post('https://invicon-server-x4ff.onrender.com/generate-invite', {username});
                 setInviteLink(response.data.inviteLink);
                 localStorage.setItem('inviteLink', response.data.inviteLink);
             } catch (error) {
@@ -186,7 +186,7 @@ let InviteChecker = () => {
         if (username) {
             const check = async () => {
                 try {
-                    const response = await axios.post(`http://invicon-server-x4ff.onrender.com/invite-check`, { username, inviteId });
+                    const response = await axios.post(`https://invicon-server-x4ff.onrender.com/invite-check`, { username, inviteId });
                     if (response.data.message === "Invalid invite code.") {
                         console.error("Error:", response.data.message);
                     } else if (response.data.message === "Code found and updated data.") {
@@ -231,7 +231,7 @@ const PaymentOptions = ({ open, username, selectedTier, availableTiers }) => {
         try {
             setLoading(true)
             // Create Order
-            const res = await axios.post("http://127.0.0.1:2004/create-order", { price });
+            const res = await axios.post("https://invicon-server-x4ff.onrender.com/create-order", { price });
             const orderId = res.data.orderId;
 
             // Redirect to PayPal
@@ -243,7 +243,7 @@ const PaymentOptions = ({ open, username, selectedTier, availableTiers }) => {
 
             if (userConfirmed) {
                 // Step 4: Capture Order and Update Tier
-                const captureRes = await axios.post("http://127.0.0.1:2004/capture-order", {
+                const captureRes = await axios.post("https://invicon-server-x4ff.onrender.com/capture-order", {
                     orderId,
                     username,
                     tier: parseInt(tier.split(' ')[1]) // Tier 1 → 1
