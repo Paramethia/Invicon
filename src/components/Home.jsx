@@ -343,7 +343,7 @@ const Home = () => {
 
         const fetchInviteData = async () => {
              try {
-                const response = await axios.post('http://invicon-server-x4ff.onrender.com/invite-data', {username});
+                const response = await axios.post('https://invicon-server-x4ff.onrender.com/invite-data', {username});
                 setInvites(response.data.invites);
                 setTier(response.data.tier);
              } catch (error) {

@@ -145,7 +145,7 @@ const PaymentOptions = ({ open, username, currentTier }) => {
         try {
             setLoading(true)
             // Create Order
-            const res = await axios.post("http://invicon-server-x4ff.onrender.com/create-order", { price });
+            const res = await axios.post("https://invicon-server-x4ff.onrender.com/create-order", { price });
             const orderId = res.data.orderId;
 
             // Redirect to PayPal
@@ -157,7 +157,7 @@ const PaymentOptions = ({ open, username, currentTier }) => {
 
             if (userConfirmed) {
                 // Step 4: Capture Order and Update Tier
-                const captureRes = await axios.post("http://invicon-server-x4ff.onrender.com/capture-order", {
+                const captureRes = await axios.post("https://invicon-server-x4ff.onrender.com/capture-order", {
                     orderId,
                     username,
                     tier
