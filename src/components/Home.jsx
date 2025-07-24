@@ -342,15 +342,15 @@ const Home = () => {
     useEffect(() => {
 
         const fetchInviteData = async () => {
-             try {
+            try {
                 const response = await axios.post('https://invicon-server-x4ff.onrender.com/invite-data', {username});
                 setInvites(response.data.invites);
                 setTier(response.data.tier);
-             } catch (error) {
+            } catch (error) {
                 console.error('Error fetching invite data', error);
-             } finally {
-                 setLoading(false)
-             }
+            } finally {
+                setLoading(false)
+            }
         };
             
         setTimeout(() => {
