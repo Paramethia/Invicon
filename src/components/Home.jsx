@@ -1,14 +1,14 @@
-import React, { useState, useContext, useEffect } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { Helmet } from "react-helmet";
-import { Link, useLocation } from 'react-router-dom';
+import { Link} from 'react-router-dom';
 import axios from 'axios';
 import { UserContext } from './UserContext';
 import { useNavigate } from 'react-router-dom';
-import { toast, ToastContainer, Bounce, Zoom, Slide } from 'react-toastify';
+import { toast, ToastContainer, Flip, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FiHome as HomeIcon, FiGift as GiftIcon, FiUsers as UsersIcon, FiMail as ConIcon, FiLogOut as LoutIcon, FiLogIn as LinIcon, FiCopy as CopyIcon } from 'react-icons/fi';
 import { FaMoon, FaSun, FaBars, FaTimes, FaPaypal, FaBitcoin, FaWallet, FaTimesCircle, FaDiscord } from 'react-icons/fa';
-import './Extra styles.css';
+import './Stylings/Extra styles.css';
 
 const Header = () => {
     return ( 
@@ -33,13 +33,12 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         toast.success('Copied to clipboard! 🗒️', {
            position: "top-center",
             autoClose: 2800,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
+            hideProgressBar: true,
+            closeOnClick: false,
+            pauseOnHover: false,
+            draggable: false,
             theme: "dark",
-            transition: Zoom,
+            transition: Slide,
         });
     };
 
@@ -121,7 +120,7 @@ const InviteLinkGeneration = () => {
        } else {
            const fetchInviteLink = async () => {
              try {
-                const response = await axios.post('https://invicon-server-x4ff.onrender.com/generate-invite', {username});
+                const response = await axios.post('http://invicon-server-x4ff.onrender.com/generate-invite', {username});
                 setInviteLink(response.data.inviteLink);
                 localStorage.setItem('inviteLink', response.data.inviteLink);
             } catch (error) {
@@ -138,19 +137,16 @@ const InviteLinkGeneration = () => {
         toast.success('Copied to clipboard! 🗒️', {
             position: "top-center",
             autoClose: 2800,
-            hideProgressBar: false,
+            hideProgressBar: true,
             closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
+            pauseOnHover: false,
+            draggable: false,
             theme: "dark",
-            transition: Zoom,
+            transition: Slide,
         });
     };
 
     return (
-        <>
-
         <div className="Link-gen-con bg-white dark:bg-gray-800 shadow rounded-lg p-6">
             <div className="mb-4">
                 <h2 className="text-xl font-semibold text-gray-700 dark:text-white">Your Invite Link</h2>
@@ -175,8 +171,6 @@ const InviteLinkGeneration = () => {
                 )}
             </div>
         </div>
-
-        </>
     );
 };
 
@@ -184,13 +178,15 @@ let InviteChecker = () => {
     const inviteId = localStorage.getItem("usedInvite");
     let {username} = useContext(UserContext);
 
-    if (inviteId != null) console.log("Your registered using the invite code:", inviteId)
+    if (inviteId === "null") {
+        return
+    }
 
     useEffect(() => {
         if (username) {
             const check = async () => {
                 try {
-                    const response = await axios.post(`https://invicon-server-x4ff.onrender.com/invite-check`, { username, inviteId });
+                    const response = await axios.post(`http://invicon-server-x4ff.onrender.com/invite-check`, { username, inviteId });
                     if (response.data.message === "Invalid invite code.") {
                         console.error("Error:", response.data.message);
                     } else if (response.data.message === "Code found and updated data.") {
@@ -207,46 +203,116 @@ let InviteChecker = () => {
     }, [username]);
 };
 
-const PaymentOptions = ({ onClose }) => {
+const PaymentOptions = ({ open, username, selectedTier, availableTiers }) => {
+    let [loading, setLoading] = useState(false);
     
+    const buyTier = async () => {
+        if (!username) {
+            toast.warn("Log in first before buying", {
+                position: "top-center",
+                autoClose: 3300,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: false,
+                theme: "dark",
+                transition: Flip
+            });
+            setTimeout(()=> { navigateTo("/login") }, 3400 );
+            return;
+        }
+
+        // Set tier and price dynamically from button click
+        const selected = availableTiers.find(t => t.tier === selectedTier);
+        if (!selected) return;
+
+        const { tier, price } = selected;
+
+        try {
+            setLoading(true)
+            // Create Order
+            const res = await axios.post("http://127.0.0.1:2004/create-order", { price });
+            const orderId = res.data.orderId;
+
+            // Redirect to PayPal
+            const approvalUrl = `https://www.sandbox.paypal.com/checkoutnow?token=${orderId}`;
+            window.open(approvalUrl, "_blank");
+
+            // Wait for user to finish, then ask for confirmation
+            const userConfirmed = window.confirm("After completing the payment, click OK to finalize.");
+
+            if (userConfirmed) {
+                // Step 4: Capture Order and Update Tier
+                const captureRes = await axios.post("http://127.0.0.1:2004/capture-order", {
+                    orderId,
+                    username,
+                    tier: parseInt(tier.split(' ')[1]) // Tier 1 → 1
+                });
+
+                if (captureRes.data.message) {
+                    toast.success("Tier bought!", {
+                        position: "top-center",
+                        autoClose: 2000,
+                        pauseOnHover: false,
+                        theme: "dark",
+                        transition: Zoom
+                    });
+                    setTimeout(() => { window.location.reload() }, 2100 )
+                }
+            }
+        } catch (err) {
+            console.error(err);
+            toast.error("Something went wrong with the payment", {
+                position: "top-center",
+                autoClose: 3000,
+                pauseOnHover: false,
+                hideProgressBar: true
+            });
+        } finally {
+            setLoading(false)
+        }
+    };
+
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-8">
-            <div className="Payment-options bg-gray-300 dark:bg-gray-800 rounded-lg p-6 w-80 relative">
-                <button onClick={onClose} className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 dark:hover:text-white">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-8 overflow-y-auto">
+            <div className="Payment-options bg-gray-300 dark:bg-gray-800 rounded-lg p-6 relative">
+                <button onClick={() => open(false)} className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 dark:hover:text-white">
                     <FaTimesCircle className="w-6 h-6" />
                 </button>
                 <h2 className="text-lg font-bold text-gray-700 dark:text-white mb-4 text-center">Select Payment Method</h2>
                 <div className="grid gap-4">
-                    <a href="https://www.paypal.com/paypalme/KyrinKompi" target="_blank">
-                        <button className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"> <FaPaypal className="w-6 h-6 mr-2 inline" /> PayPal </button>
-                    </a>
-                    <p className="text-xs text-black">
-                        <span className="font-bold">NOTE:</span> Ensure you include a message with your username when sending the money.
-                    </p>
+                    <button onClick={buyTier} className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600" disabled={loading}>
+                        { loading ? (
+                            <center><div className="dotted-loader"></div></center>
+                        ) : (
+                            <>
+                            <FaPaypal className="inline w-6 h-6 mr-2" /> PayPal
+                            </>
+                        )}
+                    </button>
                     <a href="https://www.instagram.com/poison8x/profilecard/?igsh=MWRnejFnNzRwN3U3OA==" target="_blank">
-                       <button className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"> <FaBitcoin className="w-6 h-6 mr-2 inline" /> Crypto </button>
+                       <button className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"> <FaBitcoin className="inline w-6 h-6 mr-2" /> Crypto </button>
                     </a>
                     <a href="https://www.instagram.com/poison8x/profilecard/?igsh=MWRnejFnNzRwN3U3OA==">
-                       <button className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"> <FaWallet className="w-6 h-6 mr-2 inline" /> Other </button>
+                       <button className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"> <FaWallet className="inline w-6 h-6 mr-2" /> Other </button>
                     </a>
                 </div>
             </div>
         </div>
     );
-};
+}
 
 const Home = () => {
     const inviteLink = useState('');
-    const [isDarkMode, setIsDarkMode] = useState(true);
+    const {username, darkMode, setDarkMode} = useContext(UserContext);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [loading, setLoading] = useState(true);
     const [invites, setInvites] = useState();
     const [tier, setTier] = useState();
     let requiredInvites = 5;
     let nextTier = 1;
-    let {username} = useContext(UserContext);
     const darkModeStyles = { backgroundColor: '#101424' };
-    const lightModeStyles = { backgroundColor: '#ffffff' };
+    const lightModeStyles = { backgroundColor: '#dddddd' };
     const [selectedTier, setSelectedTier] = useState('Tier 1');
     const [showAllT, setShowAllT] = useState(false);
     const [isPaymentConOpen, setIsPaymentConOpen] = useState(false);
@@ -266,19 +332,18 @@ const Home = () => {
 
     const progressPercentage = (invites / (invites + requiredInvites)) * 100;
     
-    const toggleTheme = () => { setIsDarkMode(!isDarkMode) }
+    const toggleTheme = () => { 
+        setDarkMode(!darkMode);
+        localStorage.setItem("darkMode", !darkMode);
+    }
 
     const toggleSidebar = () => { setIsSidebarOpen(!isSidebarOpen) }
-
-    const payOptionsOpen = () => { setIsPaymentConOpen(true) }
-
-    const payOptionsClose = () => { setIsPaymentConOpen(false) }
 
     useEffect(() => {
 
         const fetchInviteData = async () => {
              try {
-                const response = await axios.post('https://invicon-server-x4ff.onrender.com/invite-data', {username});
+                const response = await axios.post('http://invicon-server-x4ff.onrender.com/invite-data', {username});
                 setInvites(response.data.invites);
                 setTier(response.data.tier);
              } catch (error) {
@@ -325,13 +390,13 @@ const Home = () => {
 
         <div className="flex h-screen">
 
-            <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} inviteLink={inviteLink} />
+            { !isPaymentConOpen && (<Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} inviteLink={inviteLink} />)}
 
-            <main className="flex-1 space-y-6 p-8 overflow-auto" style={isDarkMode ? darkModeStyles : lightModeStyles}>
+            <main className="flex-1 space-y-6 p-8 overflow-auto" style={darkMode ? darkModeStyles : lightModeStyles}>
                 <div
                     className="Top-bar flex px-3 mb-5 items-center justify-between"
                     style={{
-                        backgroundColor: isDarkMode ? '#101424' : '#282434',
+                        backgroundColor: darkMode ? '#101424' : '#282434',
                         padding: '10px',
                         borderRadius: '5px',
                     }}
@@ -351,20 +416,20 @@ const Home = () => {
                     </Link>
                     <div className="Theme">
                         <label className="switch">
-                            <input type="checkbox" checked={isDarkMode} onChange={toggleTheme} />
+                            <input type="checkbox" checked={darkMode} onChange={toggleTheme} />
                             <span className="slider round">
                                 <span className="icon-container">
-                                    {isDarkMode ? <FaSun color="#fff" /> : <FaMoon color="#333" />}
+                                    {darkMode ? <FaSun color="#fff" /> : <FaMoon color="#333" />}
                                 </span>
                             </span>
                         </label>
                     </div>
                 </div>
                 <div className="max-w-3xl mx-auto mt-12">
-                    <h1 className="text-3xl font-bold" style={{ color: isDarkMode ? '#ffffff' : '#1a202c' }}>
+                    <h1 className="text-3xl font-bold" style={{ color: darkMode ? '#ffffff' : '#1a202c' }}>
                         How it works
                     </h1>
-                    <p className="text-gray-500" style={{ color: isDarkMode ? '#a0aec0' : '#4a5568' }}>
+                    <p className="text-gray-500" style={{ color: darkMode ? '#a0aec0' : '#4a5568' }}>
                         You invite people using your own generated invite link. The more invites you get, the more tiers you unlock to earn better and bigger rewards. <br />
                         Alternatively, you can buy tiers to get instant access to the rewards for if you are unable to invite people. Prices will be shown below. <br />
                         <span id="look">You can claim rewards in the <Link id="R-page" to="/rewards"> rewards page </Link>.</span>
@@ -425,12 +490,11 @@ const Home = () => {
                         )}
                     </div>
                     
-                    <h1 className="text-center dark:text-gray-300 text-gray-700 text-4xl" style={{ color: isDarkMode ? '#ffffff' : '#1a202c' }}>
+                    <h1 className="text-center dark:text-gray-300 text-gray-700 text-4xl" style={{ color: darkMode ? '#ffffff' : '#1a202c' }}>
                         Tier rewards
                     </h1>
 
-                    <div className="Tier-info">
-
+                    <div className="Tier-info" style={{ backgroundColor: darkMode ? '#1a202c' : '#ffffff' }}>
                          
                         <h4> Download not necessary </h4>
 
@@ -443,35 +507,35 @@ const Home = () => {
                         </select>
                         </center>
                         <br />
-                        {showAllT === true && ( <h2 className="text-2xl text center text-gray-500" style={{ color: isDarkMode ? '#ffffff' : '#1a202c' }}> First tier: </h2> )}
+                        {showAllT === true && ( <h2 className="text-2xl text center text-gray-500" style={{ color: darkMode ? '#ffffff' : '#1a202c' }}> First tier: </h2> )}
                         {(selectedTier === "Tier 1" || showAllT) && (
                         <ul>
-                            <li> Something small but nice </li>
-                            <li> 4GB+ folder </li>
+                            <li className={`${ darkMode ? "text-gray-300" : "text-gray-700"}`}> Something small but nice </li>
+                            <li className={`${ darkMode ? "text-gray-300" : "text-gray-700"}`}> 4GB+ folder </li>
                         </ul>
                         )}
-                        {showAllT === true && ( <h2 className="text-2xl text center text-gray-500" style={{ color: isDarkMode ? '#ffffff' : '#1a202c' }}> Second tier: </h2> )}
+                        {showAllT === true && ( <h2 className="text-2xl text center text-gray-500" style={{ color: darkMode ? '#ffffff' : '#1a202c' }}> Second tier: </h2> )}
                         {(selectedTier === "Tier 2" || showAllT) && (
                         <ul>
-                            <li> Tier 1 reward (4.4GB)</li>
-                            <li> Something big </li>
-                            <li> 8GB+ folder </li>
+                            <li className={`${ darkMode ? "text-gray-300" : "text-gray-700"}`}> Tier 1 reward (4.4GB)</li>
+                            <li className={`${ darkMode ? "text-gray-300" : "text-gray-700"}`}> Something big </li>
+                            <li className={`${ darkMode ? "text-gray-300" : "text-gray-700"}`}> 8GB+ folder </li>
                         </ul>
                         )}
-                        {showAllT === true && ( <h2 className="text-2xl text center text-gray-500" style={{ color: isDarkMode ? '#ffffff' : '#1a202c' }}> Three tier: </h2> )}
+                        {showAllT === true && ( <h2 className="text-2xl text center text-gray-500" style={{ color: darkMode ? '#ffffff' : '#1a202c' }}> Three tier: </h2> )}
                         {(selectedTier === "Tier 3" || showAllT) && (
                         <ul>
-                            <li> Tier 1 & 2 rewards </li>
-                            <li> Something bigger </li>
-                            <li> 14GB+ folder </li>
+                            <li className={`${ darkMode ? "text-gray-300" : "text-gray-700"}`}> Tier 1 & 2 rewards </li>
+                            <li className={`${ darkMode ? "text-gray-300" : "text-gray-700"}`}> Something bigger </li>
+                            <li className={`${ darkMode ? "text-gray-300" : "text-gray-700"}`}> 14GB+ folder </li>
                         </ul>
                         )}
-                        {showAllT === true && ( <h2 className="text-2xl text center text-gray-500" style={{ color: isDarkMode ? '#ffffff' : '#1a202c' }}> Fourth tier: </h2> )}
+                        {showAllT === true && ( <h2 className="text-2xl text center text-gray-500" style={{ color: darkMode ? '#ffffff' : '#1a202c' }}> Fourth tier: </h2> )}
                         {(selectedTier === "Tier 4" || showAllT) && (    
                         <ul>
-                            <li> All above rewards (30.7GB) </li>
-                            <li> Something much bigger </li>
-                            <li> 17GB+ </li>
+                            <li className={`${ darkMode ? "text-gray-300" : "text-gray-700"}`}> All above rewards (30.7GB) </li>
+                            <li className={`${ darkMode ? "text-gray-300" : "text-gray-700"}`}> Something much bigger </li>
+                            <li className={`${ darkMode ? "text-gray-300" : "text-gray-700"}`}> 17GB+ </li>
                         </ul>
                         )}
 
@@ -479,7 +543,7 @@ const Home = () => {
                     </div>
 
                     {tier < 4 ? (
-                        <h1 className="text-center dark:text-gray-300 text-gray-700 text-4xl" style={{ color: isDarkMode ? '#ffffff' : '#1a202c' }}>
+                        <h1 className="text-center dark:text-gray-300 text-gray-700 text-4xl" style={{ color: darkMode ? '#ffffff' : '#1a202c' }}>
                             Tier requirements
                         </h1>
                     ) : (
@@ -487,7 +551,7 @@ const Home = () => {
                     )}
 
                     {tier === 4 && (
-                        <h3 className="text-center dark:text-gray-300 text-gray-700 text-xl" style={{ color: isDarkMode ? '#ffffff' : '#1a202c' }}>
+                        <h3 className="text-center dark:text-gray-300 text-gray-700 text-xl" style={{ color: darkMode ? '#ffffff' : '#1a202c' }}>
                             You have reached the highest tier. Go claim your rewards in the rewards page.
                         </h3>
                     )}
@@ -500,7 +564,7 @@ const Home = () => {
                                 <p className="text-gray-500 font-semibold dark:text-gray-400"> Reach {invites} invites </p>
                                 <p className="text-gray-500 dark:text-gray-400"> or pay </p>
                                 <h3 className="text-gray-700 font-bold dark:text-gray-300"> ${price} </h3>
-                                <button className="mt-auto bg-gray-300 dark:bg-gray-700 text-gray-900 py-2 px-4 rounded-lg hover:bg-blue-500 transition-colors" onClick={payOptionsOpen}>
+                                <button className="mt-auto bg-gray-300 dark:bg-gray-700 text-gray-900 py-2 px-4 rounded-lg hover:bg-blue-500 transition-colors" onClick={() => { setIsPaymentConOpen(true); setSelectedTier(tier) }}>
                                     Buy Now
                                 </button>
                             </div>
@@ -513,8 +577,9 @@ const Home = () => {
             </a>
         </div>
         
-        {isPaymentConOpen && <PaymentOptions onClose={payOptionsClose} />}
-
+        {isPaymentConOpen && (
+            <PaymentOptions open={setIsPaymentConOpen} username={username} selectedTier={selectedTier} availableTiers={availableTiers} />
+        )}
         </>
     );
 };

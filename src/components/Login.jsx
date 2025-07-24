@@ -8,7 +8,7 @@ import { UserContext } from './UserContext';
 import { toast, ToastContainer, Bounce } from 'react-toastify';
 import'react-toastify/dist/ReactToastify.css';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import './Login.css';
+import './Stylings/Login.css';
 
 const Header = () => {
     return ( 
@@ -24,7 +24,6 @@ const Login = () => {
     let [passwordVisible, setPasswordVisibility] = useState(false);
     const navigate = useNavigate();
     let storedUsername = localStorage.getItem("username");
-    const storedLink = localStorage.getItem("inviteLink");
     let [responded, setResponded] = useState(false);
     const [loading, setLoading] = useState(false);
     let [seconds, setSeconds] =  useState(55);
@@ -121,7 +120,7 @@ const Login = () => {
                                 </label>
                                 <input
                                     type={passwordVisible ? "text" : "password"}
-                                    maxLength="17"
+                                    maxLength="21"
                                     placeholder="Enter password"
                                     className="form-control block w-full bg-gray-200 px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                     id="exampleInputPassword1"
@@ -129,7 +128,7 @@ const Login = () => {
                                     required
                                 />
                                 <button type="button" className="absolute right-2 bottom-2 p-1" onClick={togglePasswordVisibility}>
-                                    {passwordVisible ? <FaEyeSlash /> : <FaEye />}
+                                    {passwordVisible ? <FaEye /> : <FaEyeSlash />}
                                 </button>
                             </div>
                             <button type="submit" className="w-full bg-dark text-white py-2 rounded-md hover:bg-dark transition duration-300 ease-in-out transform hover:scale-105"> Log in </button>

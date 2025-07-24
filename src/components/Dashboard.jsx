@@ -1,14 +1,13 @@
-import React, { useState, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Helmet } from "react-helmet";
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import { UserContext } from './UserContext';
 import { Link } from 'react-router-dom';
-import { toast, ToastContainer, Bounce, Zoom } from 'react-toastify';
+import { toast, ToastContainer, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FiHome as HomeIcon, FiCamera as CameraIcon, FiUsers as UsersIcon, FiMail as ConIcon, FiLogOut as LoutIcon, FiLogIn as LinIcon, FiCopy as CopyIcon } from 'react-icons/fi';
 import { FaMoon, FaSun, FaBars, FaTimes } from 'react-icons/fa';
-import './Extra styles.css';
+import './Stylings/Extra styles.css';
 
 const Header = () => {
     return ( 
@@ -32,13 +31,12 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     toast.success('Code copied to clipboard! 🗒️', {
         position: "top-center",
         autoClose: 2800,
-        hideProgressBar: false,
+        hideProgressBar: true,
         closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
+        pauseOnHover: false,
+        draggable: false,
         theme: "dark",
-        transition: Zoom,
+        transition: Slide,
      });
   };
 
@@ -108,9 +106,8 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 };
 
 const Dashboard = () => {
-    let { username } = useContext(UserContext);
+    let { username, darkMode, setDarkMode } = useContext(UserContext);
     const [invitees, setInvitees] = useState([]);
-    const [isDarkMode, setIsDarkMode] = useState(true);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     const darkModeStyles = { backgroundColor: '#101424' };
@@ -132,9 +129,10 @@ const Dashboard = () => {
         if (username) fetchInvitees()
     }, [username]);
 
-    const toggleTheme = () => {
-        setIsDarkMode(!isDarkMode);
-    };
+    const toggleTheme = () => { 
+        setDarkMode(!darkMode);
+        localStorage.setItem("darkMode", !darkMode);
+    }
 
     const toggleSidebar = () => {
         setIsSidebarOpen(!isSidebarOpen);
@@ -147,11 +145,11 @@ const Dashboard = () => {
 
             <div className="flex h-screen">
                 <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-                <main className="flex-1 flex flex-col p-8 overflow-auto" style={isDarkMode ? darkModeStyles : lightModeStyles}>
+                <main className="flex-1 flex flex-col p-8 overflow-auto" style={darkMode ? darkModeStyles : lightModeStyles}>
                     <div
                         className="Top-bar w-full flex px-3 mb-5 items-center justify-between"
                         style={{
-                            backgroundColor: isDarkMode ? '#101424' : '#282434',
+                            backgroundColor: darkMode ? '#101424' : '#282434',
                             padding: '10px',
                             borderRadius: '5px',
                         }}
@@ -169,17 +167,17 @@ const Dashboard = () => {
                         </Link>
                         <div className="Theme">
                             <label className="switch">
-                                <input type="checkbox" checked={isDarkMode} onChange={toggleTheme} />
+                                <input type="checkbox" checked={darkMode} onChange={toggleTheme} />
                                 <span className="slider round">
                                     <span className="icon-container">
-                                        {isDarkMode ? <FaSun color="#fff" /> : <FaMoon color="#333" />}
+                                        {darkMode ? <FaSun color="#fff" /> : <FaMoon color="#333" />}
                                     </span>
                                 </span>
                             </label>
                         </div>
                     </div>
                     
-                    <h1 className="text-center dark:text-gray-300 text-gray-700 text-4xl" style={{ color: isDarkMode ? '#ffffff' : '#1a202c' }}>
+                    <h1 className="text-center dark:text-gray-300 text-gray-700 text-4xl" style={{ color: darkMode ? '#ffffff' : '#1a202c' }}>
                         Dashboard
                     </h1>
 

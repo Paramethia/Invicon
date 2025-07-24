@@ -9,7 +9,7 @@ import { UserContext } from './UserContext';
 import { toast, ToastContainer, Bounce, Flip, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import './Register.css';
+import './Stylings/Register.css';
 
 const Header = () => {
     return ( 
@@ -199,7 +199,7 @@ const Register = () => {
                                 <input
                                     type={passwordVisible ? "text" : "password"}
                                     minLength="4"
-                                    maxLength="17"
+                                    maxLength="21"
                                     placeholder="Create password"
                                     className="form-control block w-full bg-gray-200 px-3 py-2 border border-gray-500 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                     id="exampleInputPassword1"
@@ -207,7 +207,7 @@ const Register = () => {
                                     required
                                 />
                                 <button type="button" className="absolute right-3 bottom-2 p-1" onClick={togglePasswordVisibility}>
-                                    {passwordVisible ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
+                                    {passwordVisible ? <FaEye className="w-4 h-4" /> : <FaEyeSlash className="w-4 h-4" />}
                                 </button>
                             </div>
                             {warning && <p className="text-red-500 text-sm mt-1">{warning}</p>}

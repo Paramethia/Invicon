@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './Home';
 import Login from './Login';
@@ -12,18 +12,22 @@ import { UserContext } from './UserContext';
 function App() {
   const [username, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [darkMode, setDarkMode] = useState(true);
 
- // Check local storage (cache) on app load
+  // Check local storage (cache) on app load
 
   useEffect(() => {
     const storedUsername = localStorage.getItem('username');
     const storedEmail = localStorage.getItem('email');
+    const savedTheme = localStorage.getItem("darkMode");
+
     if (storedUsername) setName(storedUsername);
     if (storedEmail) setEmail(storedEmail);
+    if (savedTheme === "false") setDarkMode(false);
   }, []);
 
   return (
-      <UserContext.Provider value={{ username, setName, email, setEmail }}>
+      <UserContext.Provider value={{ username, setName, email, setEmail, darkMode, setDarkMode }}>
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
