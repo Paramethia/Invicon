@@ -6,7 +6,7 @@ import { Link, useLocation } from "react-router-dom";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from './UserContext';
-import { toast, ToastContainer, Bounce, Flip, Slide } from 'react-toastify';
+import { toast, ToastContainer, Flip} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import './Stylings/Register.css';
@@ -103,10 +103,9 @@ const Register = () => {
                         position: "top-center",
                         autoClose: 4000,
                         hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
+                        closeOnClick: false,
+                        pauseOnHover: false,
+                        draggable: false,
                         theme: "dark",
                         transition: Flip,
                     });
@@ -127,12 +126,10 @@ const Register = () => {
                     position: "top-center",
                     autoClose: 4000,
                     hideProgressBar: true,
-                    closeOnClick: true,
+                    closeOnClick: false,
                     pauseOnHover: false,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                    transition: Bounce,
+                    draggable: false,
+                    theme: "dark"
                 });
             } finally { setResponded(true) }
         }   

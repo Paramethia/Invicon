@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from './UserContext';
-import { toast, ToastContainer, Bounce } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
 import'react-toastify/dist/ReactToastify.css';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import './Stylings/Login.css';
@@ -59,13 +59,11 @@ const Login = () => {
                 toast.error('Invalid username or password. Try again.', {
                     position: "top-center",
                     autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                    transition: Bounce,
+                    hideProgressBar: true,
+                    closeOnClick: false,
+                    pauseOnHover: false,
+                    draggable: false,
+                    theme: "dark"
                 });
             }
         } catch(error) {
@@ -74,12 +72,10 @@ const Login = () => {
                 position: "top-center",
                 autoClose: 2700,
                 hideProgressBar: true,
-                closeOnClick: true,
+                closeOnClick: false,
                 pauseOnHover: false,
-                draggable: true,
-                progress: undefined,
+                draggable: false,
                 theme: "dark",
-                transition: Bounce,
             });
         } finally { setResponded(true) }
     }
