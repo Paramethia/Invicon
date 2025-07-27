@@ -37,7 +37,7 @@ const Register = () => {
         let note = document.getElementById("Email-note");
     
         setTimeout(() => {
-            note.style.display = 'none'
+            if (note !== null) note.style.display = 'none'
         }, 4800 );
     });
     
@@ -180,7 +180,7 @@ const Register = () => {
                                 </label>
                                 <input
                                     type="email"
-                                    minLengh="12"
+                                    minLength="12"
                                     maxLength="35"
                                     placeholder="Enter email"
                                     className="form-control block w-full bg-gray-200 px-3 py-2 border border-gray-500 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
