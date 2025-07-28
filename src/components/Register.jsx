@@ -41,8 +41,9 @@ const Register = () => {
     });
 
     useEffect(() => {
+        let timer;
         if (loading && seconds > 0) {
-            var timer = setInterval(() => {
+            timer = setInterval(() => {
                 setSeconds(prev => {
                     if (prev <= 1) {
                         clearInterval(timer);
