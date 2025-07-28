@@ -50,7 +50,6 @@ const Register = () => {
 
     const handleRegister = async (event) => {
         event.preventDefault();
-        setLoading(true);
 
         // Regular expression to check for invalid characters in the username
         let usernameVal = /^[a-zA-Z0-9._]+$/;
@@ -85,6 +84,7 @@ const Register = () => {
             if (email) { requestBody.email = email }
     
             try {
+                setLoading(true);
                 const response = await axios.post('https://invicon-server-x4ff.onrender.com/register', requestBody, {withCredential: true})
                 if (response.data === "Account already registered.") {
                     toast.warn("Already registered, pal. Go log in", {
