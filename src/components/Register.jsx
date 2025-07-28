@@ -58,7 +58,6 @@ const Register = () => {
         // Check for spaces or invalid characters in the username
         if (!usernameVal.test(username)) {
             setUsernameError("Username cannot have empty spaces, emojis, or other invalid characters.");
-            setLoading(false);
             return;
         } else {
             setUsernameError(''); // Clear the error if the username is valid
@@ -69,11 +68,13 @@ const Register = () => {
             setTimeout(() => {
                 navigate('/login');
             }, 5000);
+            return
         } else if (usedInvite != null && alreadyReg) {
             setWarning("You cannot use invite links if you already registered on this device.");
             setTimeout(() => {
                 navigate('/login');
             }, 4850);
+            return
         } else {
             // Construct the request body based on whether email is provided
             const requestBody = {
@@ -81,9 +82,7 @@ const Register = () => {
                 password,
                 usedInvite
             };
-            if (email) {
-                requestBody.email = email;
-            }
+            if (email) { requestBody.email = email }
     
             try {
                 const response = await axios.post('https://invicon-server-x4ff.onrender.com/register', requestBody, {withCredential: true})
@@ -192,7 +191,7 @@ const Register = () => {
                                 </button>
                             </div>
                             {warning && <p className="text-red-500 text-sm mt-1">{warning}</p>}
-                            <button type="submit" disabled={loading} className="w-full bg-dark text-white py-2 rounded-md transition duration-300 ease-in-out transform hover:scale-105">  { loading ? <div className="dotted-loader"></div> : "Register"} </button>
+                            <button type="submit" disabled={loading} className="w-full bg-dark text-white py-2 rounded-md transition duration-300 ease-in-out transform hover:scale-105">  { loading ? <center><div className="dotted-loader bg-gray-300"></div></center> : "Register"} </button>
                         </form>
                         <p className="my-4 mx-2 sm:text-sm">Already have an account? <Link to='/login' className='text-dark'>Log in</Link></p>
                         </>
