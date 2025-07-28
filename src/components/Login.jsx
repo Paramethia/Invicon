@@ -110,14 +110,14 @@ const Login = () => {
                                 required
                             />
                             <button type="button" className="absolute right-2 bottom-2 p-1" onClick={togglePasswordVisibility}>
-                                {passwordVisible ? <FaEye /> : <FaEyeSlash />}
+                                {passwordVisible ? <FaEye /> : <aEyeSlash />}
                             </button>
                         </div>
-                        <button type="submit" className="w-full bg-dark text-white py-2 rounded-md hover:bg-dark transition duration-300 ease-in-out transform hover:scale-105"> {loading ? <div className="dots-loader m-auto"></div> : "Log in" } </button>
+                        <button type="submit" disabled={loading} className="w-full bg-dark text-white py-2 rounded-md hover:bg-dark transition duration-300 ease-in-out transform hover:scale-105"> {loading ? <div className="dots-loader m-auto"></div> : "Log in" } </button>
                     </form>
                     
                     <p className="my-4 flex sm:text-sm"> Don't have an account? <Link to='/register' className='text-dark mx-2'> Register </Link></p>
-                    <p><Link to='/request' className='text-dark'>I forgot the Password</Link></p>
+                    <p><Link to='/request' className='text-dark sm:text-sm'>I forgot the Password</Link></p>
                 </div>
             </div>           
         </div>
