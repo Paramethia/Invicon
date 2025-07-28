@@ -67,7 +67,7 @@ const Register = () => {
             setWarning("You cannot create another account while already registered on this device. Log in or reset your password if you forgot.");
             setTimeout(() => {
                 navigate('/login');
-            }, 5000);
+            }, 5800);
             return
         } else if (usedInvite != null && alreadyReg) {
             setWarning("You cannot use invite links if you already registered on this device.");
