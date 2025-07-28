@@ -166,10 +166,12 @@ input:checked + .slider:before {
 
 /* Loader styling */
 
+/* HTML: <div class="loader"></div> */
+
 .dots-loader {
-  width: 60px;
+  width: 80px;
   aspect-ratio: 4;
-  background: radial-gradient(circle closest-side,#bbb 90%,#bbbb) 0/calc(100%/3) 100% space;
+  background: radial-gradient(circle closest-side,#bbb 90%,#0000) 0/calc(100%/3) 100% space;
   clip-path: inset(0 100% 0 0);
   animation: dots-loader 1s steps(4) infinite;
 }
