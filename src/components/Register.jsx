@@ -30,7 +30,6 @@ const Register = () => {
     const [usernameError, setUsernameError] = useState('');
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
-    let [seconds, setSeconds] =  useState(55)
 
     useEffect(() => {
         let note = document.getElementById("Email-note");
@@ -39,23 +38,6 @@ const Register = () => {
             if (note !== null) note.style.display = 'none'
         }, 4800 );
     });
-
-    useEffect(() => {
-        let timer;
-        if (loading && seconds > 0) {
-            timer = setInterval(() => {
-                setSeconds(prev => {
-                    if (prev <= 1) {
-                        clearInterval(timer);
-                        return 0;
-                    }
-                    return prev - 1;
-                });
-            }, 1000);
-        }
-        return () => clearInterval(timer);
-    }, [loading, seconds]);
-
     
     // To check if the user already has an account on the device to prevent creating and inviting multiple acccount on the same device.
 
@@ -69,7 +51,6 @@ const Register = () => {
     const handleRegister = async (event) => {
         event.preventDefault();
         setLoading(true);
-        setSeconds(55);
 
         // Regular expression to check for invalid characters in the username
         let usernameVal = /^[a-zA-Z0-9._]+$/;
@@ -77,6 +58,7 @@ const Register = () => {
         // Check for spaces or invalid characters in the username
         if (!usernameVal.test(username)) {
             setUsernameError("Username cannot have empty spaces, emojis, or other invalid characters.");
+            setLoading(false);
             return;
         } else {
             setUsernameError(''); // Clear the error if the username is valid
@@ -141,10 +123,6 @@ const Register = () => {
             } finally { setLoading(false) }
         }   
     }
-  
-    function clearCache() {
-        localStorage.clear()
-    }
    
     return (
         <>
@@ -161,7 +139,6 @@ const Register = () => {
             <div className="w-full md:w-1/2 flex flex-col items-center justify-center bg-gray-400">
                 <h1 className="block md:hidden mb-6 text-4xl font-bold text-dark">Invicon</h1>
                 <div className="bg-gray-300 p-8 rounded shadow-md w-3/4 animate__animated animate__fadeInRight">
-                    { !loading ? (
                         <>
                         <h3 className="mb-6 text-2xl font-bold text-dark">Register</h3>
                         <form onSubmit={handleRegister}>
@@ -215,21 +192,10 @@ const Register = () => {
                                 </button>
                             </div>
                             {warning && <p className="text-red-500 text-sm mt-1">{warning}</p>}
-                            <button type="submit" className="w-full bg-dark text-white py-2 rounded-md transition duration-300 ease-in-out transform hover:scale-105"> Register </button>
+                            <button type="submit" disabled={loading} className="w-full bg-dark text-white py-2 rounded-md transition duration-300 ease-in-out transform hover:scale-105">  { loading ? <div className="dotted-loader"></div> : "Register"} </button>
                         </form>
-                        <p className="my-4 mx-2">Already have an account? <Link to='/login' className='text-dark'>Log in</Link></p>
+                        <p className="my-4 mx-2 sm:text-sm">Already have an account? <Link to='/login' className='text-dark'>Log in</Link></p>
                         </>
-                    ) : (
-                        <>
-                            <h4 className="mb-6 text-xl font-bold text-dark">Server is slow right now. Please wait a minute.</h4>
-                            <br />
-                            <center>
-                                <div className="loader"></div>
-                                <br />
-                                <p>{seconds}</p>
-                            </center>
-                        </>
-                    )}
                 </div>
             </div>
         </div>
