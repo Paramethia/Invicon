@@ -191,7 +191,7 @@ const Register = () => {
                                 </button>
                             </div>
                             {warning && <p className="text-red-500 text-sm mt-1">{warning}</p>}
-                            <button type="submit" disabled={loading} className={`w-full ${loading ? "bg-gray-500" : "bg-dark"} text-white py-2 rounded-md transition duration-300 ease-in-out transform hover:scale-105`}>  { loading ? <center><div className="dots-loader"></div></center> : "Register"} </button>
+                            <button type="submit" disabled={loading} className="w-full bg-dark text-white py-2 rounded-md transition duration-300 ease-in-out transform hover:scale-100">  { loading ? <center><div className="dots-loader"></div></center> : "Register"} </button>
                         </form>
                         <p className="my-4 mx-2 sm:text-sm">Already have an account? <Link to='/login' className='text-dark'>Log in</Link></p>
                         </>
