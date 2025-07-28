@@ -24,7 +24,6 @@ const Login = () => {
     let [passwordVisible, setPasswordVisibility] = useState(false);
     const navigate = useNavigate();
     let storedUsername = localStorage.getItem("username");
-    let [responded, setResponded] = useState(false);
     const [loading, setLoading] = useState(false);
     let [seconds, setSeconds] =  useState(55);
 
@@ -32,18 +31,25 @@ const Login = () => {
         setPasswordVisibility(!passwordVisible)
     }
 
+    useEffect(() => {
+        if (loading && seconds > 0) {
+            var timer = setInterval(() => {
+                setSeconds(prev => {
+                    if (prev <= 1) {
+                        clearInterval(timer);
+                        return 0;
+                    }
+                    return prev - 1;
+                });
+            }, 1000);
+        }
+        return () => clearInterval(timer);
+    }, [loading]);
+
     const handleLogin = async (event) => {
         event.preventDefault();
         setLoading(true);
-        var timer = setInterval(() => {
-            if (responded) {
-                clearInterval(timer);
-                setLoading(false);
-            } else {
-                if (seconds > 0) seconds--;
-                setSeconds(seconds);
-            }
-        }, 1000);
+        setSeconds(55)
         
         try {
             const response = await axios.post('https://invicon-server-x4ff.onrender.com/login', { username, password }, {withCredentials: true,})
@@ -77,7 +83,7 @@ const Login = () => {
                 draggable: false,
                 theme: "dark",
             });
-        } finally { setResponded(true) }
+        } finally { setLoading(false) }
     }
 
     return (

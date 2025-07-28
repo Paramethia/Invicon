@@ -29,7 +29,6 @@ const Register = () => {
     let [passwordVisible, setPasswordVisible] = useState(false);
     const [usernameError, setUsernameError] = useState('');
     const navigate = useNavigate();
-    let [responded, setResponded] = useState(false);
     const [loading, setLoading] = useState(false);
     let [seconds, setSeconds] =  useState(55)
 
@@ -40,6 +39,22 @@ const Register = () => {
             if (note !== null) note.style.display = 'none'
         }, 4800 );
     });
+
+    useEffect(() => {
+        if (loading && seconds > 0) {
+            var timer = setInterval(() => {
+                setSeconds(prev => {
+                    if (prev <= 1) {
+                        clearInterval(timer);
+                        return 0;
+                    }
+                    return prev - 1;
+                });
+            }, 1000);
+        }
+        return () => clearInterval(timer);
+    }, [loading, seconds]);
+
     
     // To check if the user already has an account on the device to prevent creating and inviting multiple acccount on the same device.
 
@@ -52,17 +67,8 @@ const Register = () => {
 
     const handleRegister = async (event) => {
         event.preventDefault();
-        setLoading(true)
-        var timer = setInterval(() => {
-            if (responded) {
-                clearInterval(timer);
-                setLoading(false);
-            } else {
-                if (seconds > 0) seconds--;
-                setSeconds(seconds);
-            }
-        }, 1000);
-
+        setLoading(true);
+        setSeconds(55);
 
         // Regular expression to check for invalid characters in the username
         let usernameVal = /^[a-zA-Z0-9._]+$/;
@@ -131,7 +137,7 @@ const Register = () => {
                     draggable: false,
                     theme: "dark"
                 });
-            } finally { setResponded(true) }
+            } finally { setLoading(false) }
         }   
     }
   
