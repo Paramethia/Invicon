@@ -369,9 +369,9 @@ const Home = () => {
             }
         };
             
-        setTimeout(() => { if (username) fetchInviteData() }, 1428);
+        setTimeout(() => { if (username) fetchInviteData() }, 1728);
         effectRan.current = true;
-    }, [username]);
+    }, []);
 
     const tierSelection = (event) => setSelectedTier(event.target.value);
 
