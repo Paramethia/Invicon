@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { Helmet } from "react-helmet";
 import { UserContext } from './UserContext';
@@ -11,11 +11,11 @@ import { FaMoon, FaSun, FaBars, FaTimes, FaPaypal, FaBitcoin, FaWallet, FaTimesC
 import './Stylings/Extra styles.css';
 
 const Header = () => {
-    return ( 
-        <Helmet>
-            <title> Invicon - rewards </title>
-        </Helmet>
-    );
+  return ( 
+    <Helmet>
+        <title> Invicon - rewards </title>
+    </Helmet>
+  );
 };
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
@@ -30,14 +30,14 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
   const handleCopyReferralCode = () => {
     navigator.clipboard.writeText(inviteLink);
     toast.success('Copied to clipboard! 🗒️', {
-        position: "top-center",
-        autoClose: 2800,
-        hideProgressBar: true,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: false,
-        theme: "dark",
-        transition: Slide
+      position: "top-center",
+      autoClose: 2800,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: false,
+      theme: "dark",
+      transition: Slide
     });
   };
 
@@ -220,11 +220,8 @@ const Rewards = () => {
   let { username, darkMode, setDarkMode } = useContext(UserContext);
   const [currentTier, setCurrentTier] = useState(0);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [playingIndex, setPlayingIndex] = useState(null);
-  const videoRefs = useRef([]);
   const darkModeStyles = { backgroundColor: '#101424' };
   const lightModeStyles = { backgroundColor: '#ffffff' };
-  const [spoilers, setSpoilers] = useState([]);
   const [isPaymentConOpen, setIsPaymentConOpen] = useState(false);
 
   useEffect(() => {
@@ -238,7 +235,7 @@ const Rewards = () => {
                 console.log(response.data.message);
             }
         } catch (error) {
-            console.error('Error fetching tier:', error);
+          console.error('Error fetching tier:', error);
         }
     };
 
@@ -247,9 +244,9 @@ const Rewards = () => {
   }, [username]);
 
   const toggleTheme = () => { 
-        setDarkMode(!darkMode);
-        localStorage.setItem("darkMode", !darkMode);
-    }
+    setDarkMode(!darkMode);
+    localStorage.setItem("darkMode", !darkMode);
+  }
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
@@ -296,10 +293,8 @@ const Rewards = () => {
 
           <div className="w-full pt-4 pb-12 dark:bg-gray-800">
             <div className="container mx-auto px-4 md:px-6 lg:px-8">
-        
               <div className="mt-10 space-y-4">
-                <br />
-                { !username && !currentTier && <p className="text-center text-xl text-gray-500" style={{ color: darkMode ? '#ffffff' : '#1a202c'}}> Tier rewards will appear below once you unlock tiers: </p> }
+                { !username && !currentTier && <p className="text-center text-xl text-gray-500 mt-3" style={{ color: darkMode ? '#ffffff' : '#1a202c'}}> Tier rewards will appear below once you unlock tiers: </p> }
 
                 <p className="text-center text-xl text-gray-500" style={{ color: darkMode ? '#ffffff' : '#1a202c'}}> Current tier: <span className="text-blue-500">{currentTier}</span> </p>
                 <br /> <br />
