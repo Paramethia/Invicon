@@ -301,12 +301,12 @@ hr {
 }
 
 .Tier-reward {
-     display: inline-block;
-     background: #a5a5ad;
-     margin-left: 20px;
-     margin-right: 20px;
-     margin-bottom: 20px;
-     animation: tilt-n-move-shaking 2s linear infinite;
+    display: inline-block;
+    background: #a5a5ad;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    animation: tilt-n-move-shaking 2s linear infinite;
 }
 
 .Reward-claim {
@@ -391,13 +391,12 @@ hr {
      
     /* Nav bar */
 
-    aside {
+    aside { 
         width: 12.4rem;
+        height: 100%;
     }
 
-    .Contact {
-        margin-top: 2cm
-    }
+    .Contact { margin-top: 2cm }
 
      /* Home page */
 
@@ -415,12 +414,9 @@ hr {
         width: 125px;
     }
 
-    #copyB {
-        display: none;
-    }
-    .Link:hover {
-        background-color: #3e97ec;
-    }
+    #copyB { display: none }
+    .Link-gen { padding: 2px }
+    .Link:hover { background-color: #3e97ec }
 
     /* Rewards page */
 

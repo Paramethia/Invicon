@@ -115,6 +115,7 @@ const InviteLinkGeneration = () => {
 
     useEffect(() => {
        const existingLink = localStorage.getItem('inviteLink');
+       if (existingLink.includes('invicon.lol')) existingLink.replace('invicon.lol', 'invicon.netlify.app') // Because I am no long paying for the domain
        if (existingLink) {
             setInviteLink(existingLink);
        } else {

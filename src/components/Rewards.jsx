@@ -230,9 +230,9 @@ const Rewards = () => {
             const response = await axios.post('https://invicon-server-x4ff.onrender.com/getTier', { username });
 
             if (response.data.message === "User found.") {
-                setCurrentTier(response.data.tier);
+              setCurrentTier(response.data.tier);
             } else {
-                console.log(response.data.message);
+              console.log(response.data.message);
             }
         } catch (error) {
           console.error('Error fetching tier:', error);
@@ -241,7 +241,7 @@ const Rewards = () => {
 
     if (username) fetchTier();
     
-  }, [username]);
+  }, []);
 
   const toggleTheme = () => { 
     setDarkMode(!darkMode);
@@ -309,7 +309,7 @@ const Rewards = () => {
                         <p className="text-gray-500 dark:text-gray-400"> or watch it online </p>
                         <a className="text-center bg-[#282434] text-white font-bold py-2 px-4 rounded transition-colors hover:bg-[#3c3a4e]">
                           <button id="reward-button" className="bg-gray-500 hover:bg-blue-500 dark:bg-gray-700 text-gray-900 dark:text-white px-4 py-2 rounded-md">
-                              Claim reward
+                            Claim reward
                           </button>
                         </a>
                       </div>
