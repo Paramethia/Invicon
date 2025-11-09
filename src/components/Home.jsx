@@ -199,6 +199,7 @@ let InviteChecker = () => {
 
         if (username) {
             const check = async () => {
+                console.log("Finding invite code...")
                 try {
                     const response = await axios.post(`https://invicon-server-x4ff.onrender.com/invite-check`, { username, inviteId });
                     if (response.data.message === "Invalid invite code.") {
@@ -357,6 +358,7 @@ const Home = () => {
     const effectRan = useRef(false);
     useEffect(() => {
         if (effectRan.current) return;
+        console.log("Fetching invite data...")
         const fetchInviteData = async () => {
             try {
                 const response = await axios.post('https://invicon-server-x4ff.onrender.com/invite-data', {username});
@@ -366,10 +368,11 @@ const Home = () => {
                 console.error('Error fetching invite data', error);
             } finally {
                 setLoading(false)
+                console.log("Fetched")
             }
         };
             
-        setTimeout(() => { if (username) fetchInviteData() }, 1728);
+        setTimeout(() => { if (username) fetchInviteData() }, 520);
         effectRan.current = true;
     }, []);
 
@@ -522,14 +525,14 @@ const Home = () => {
                         </select>
                         </center>
                         <br />
-                        {showAllT === true && ( <h2 className="text-2xl text center text-gray-500" style={{ color: darkMode ? '#ffffff' : '#1a202c' }}> First tier: </h2> )}
+                        {showAllT && <h2 className="text-2xl text center text-gray-500" style={{ color: darkMode ? '#ffffff' : '#1a202c' }}> First tier: </h2> }
                         {(selectedTier === "Tier 1" || showAllT) && (
                         <ul>
                             <li className={`${ darkMode ? "text-gray-300" : "text-gray-700"}`}> Something small but nice </li>
                             <li className={`${ darkMode ? "text-gray-300" : "text-gray-700"}`}> 4GB+ folder </li>
                         </ul>
                         )}
-                        {showAllT === true && ( <h2 className="text-2xl text center text-gray-500" style={{ color: darkMode ? '#ffffff' : '#1a202c' }}> Second tier: </h2> )}
+                        {showAllT && <h2 className="text-2xl text center text-gray-500" style={{ color: darkMode ? '#ffffff' : '#1a202c' }}> Second tier: </h2> }
                         {(selectedTier === "Tier 2" || showAllT) && (
                         <ul>
                             <li className={`${ darkMode ? "text-gray-300" : "text-gray-700"}`}> Tier 1 reward (4.4GB)</li>
@@ -537,7 +540,7 @@ const Home = () => {
                             <li className={`${ darkMode ? "text-gray-300" : "text-gray-700"}`}> 8GB+ folder </li>
                         </ul>
                         )}
-                        {showAllT === true && ( <h2 className="text-2xl text center text-gray-500" style={{ color: darkMode ? '#ffffff' : '#1a202c' }}> Three tier: </h2> )}
+                        {showAllT && <h2 className="text-2xl text center text-gray-500" style={{ color: darkMode ? '#ffffff' : '#1a202c' }}> Three tier: </h2> }
                         {(selectedTier === "Tier 3" || showAllT) && (
                         <ul>
                             <li className={`${ darkMode ? "text-gray-300" : "text-gray-700"}`}> Tier 1 & 2 rewards </li>
@@ -545,7 +548,7 @@ const Home = () => {
                             <li className={`${ darkMode ? "text-gray-300" : "text-gray-700"}`}> 14GB+ folder </li>
                         </ul>
                         )}
-                        {showAllT === true && ( <h2 className="text-2xl text center text-gray-500" style={{ color: darkMode ? '#ffffff' : '#1a202c' }}> Fourth tier: </h2> )}
+                        {showAllT && <h2 className="text-2xl text center text-gray-500" style={{ color: darkMode ? '#ffffff' : '#1a202c' }}> Fourth tier: </h2> }
                         {(selectedTier === "Tier 4" || showAllT) && (    
                         <ul>
                             <li className={`${ darkMode ? "text-gray-300" : "text-gray-700"}`}> All above rewards (30.7GB) </li>
