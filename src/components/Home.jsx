@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer, Flip, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FiHome as HomeIcon, FiGift as GiftIcon, FiUsers as UsersIcon, FiMail as ConIcon, FiLogOut as LoutIcon, FiLogIn as LinIcon, FiCopy as CopyIcon } from 'react-icons/fi';
-import { FaMoon, FaSun, FaBars, FaTimes, FaPaypal, FaBitcoin, FaWallet, FaTimesCircle, FaDiscord } from 'react-icons/fa';
+import { FaMoon, FaSun, FaBars, FaTimes, FaPaypal, FaBitcoin, FaWallet, FaTimesCircle } from 'react-icons/fa';
 import './Stylings/Extra styles.css';
 
 const Header = () => {
@@ -114,8 +114,8 @@ const InviteLinkGeneration = () => {
     const navigateTo = useNavigate();
 
     useEffect(() => {
-       const existingLink = localStorage.getItem('inviteLink');
-       if (existingLink.includes('invicon.lol')) existingLink.replace('invicon.lol', 'invicon.netlify.app') // Because I am no long paying for the domain
+       let existingLink = localStorage.getItem('inviteLink');
+       if (existingLink && existingLink.includes('invicon.lol')) existingLink = existingLink.replace('invicon.lol', 'invicon.netlify.app') // Because I am no long paying for the domain
        if (existingLink) {
             setInviteLink(existingLink);
        } else {
@@ -159,7 +159,7 @@ const InviteLinkGeneration = () => {
                     <>
                     { !error && (
                     <>
-                    <div onClick={handleCopy} className="Link bg-gray-200 dark:bg-gray-800 rounded-md px-4 py-2 text-lg font-medium text-gray-700 dark:text-white">
+                    <div onClick={handleCopy} className="Link bg-gray-200 dark:bg-gray-800 rounded-md px-4 sm:px-2 py-2 text-lg font-medium text-gray-700 dark:text-white">
                         {inviteLink} 
                     </div>
                     <button id="copyB" onClick={handleCopy}>
