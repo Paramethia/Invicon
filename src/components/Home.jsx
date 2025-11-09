@@ -369,7 +369,7 @@ const Home = () => {
             }
         };
             
-        setTimeout(() => { if (username) fetchInviteData() }, 1028);
+        setTimeout(() => { if (username) fetchInviteData() }, 1428);
         effectRan.current = true;
     }, []);
 
