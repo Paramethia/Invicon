@@ -203,7 +203,7 @@ let InviteChecker = () => {
                     const response = await axios.post(`https://invicon-server-x4ff.onrender.com/invite-check`, { username, inviteId });
                     if (response.data.message === "Invalid invite code.") {
                         console.error("Error:", response.data.message);
-                    } else if (response.data.message === "Code found and updated data.") {
+                    } else if (response.data.message === "Code found and updated invites for inviter.") {
                         console.log("Invite code found.");
                         localStorage.removeItem("usedInvite");
                     }
@@ -369,9 +369,7 @@ const Home = () => {
             }
         };
             
-        setTimeout(() => {
-            if (username) fetchInviteData()
-        }, 728);
+        setTimeout(() => { if (username) fetchInviteData() }, 1028);
         effectRan.current = true;
     }, []);
 
