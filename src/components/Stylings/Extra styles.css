@@ -36,7 +36,7 @@ aside {
    transition: 0.3s;  
 }
 
-     /* Top bar styling */
+    /* Top bar styling */
 
 .Top-bar {
     margin: 0 auto;
@@ -260,20 +260,7 @@ ul {
     animation-iteration-count: 1;
 }
 
-/* Floating icons */
-
-#discord {
-    color: #7289da;
-    position: fixed;
-    bottom: 80px;
-    right: 14px;
-    margin: 20px 10px;
-    z-index: 2;
-}
-
-#discord:hover {
-    color: #99aab5;
-}
+/* icons */
 
 .r-code {
     width: 135px;
@@ -429,11 +416,10 @@ hr {
     }
 
     #copyB {
-        margin-left: 2px;
+        display: none;
     }
-
-    #discord {
-        right: 5px;
+    .Link:hover {
+        background-color: #3e97ec;
     }
 
     /* Rewards page */

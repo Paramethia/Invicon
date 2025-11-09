@@ -34,12 +34,10 @@ const Register = () => {
     useEffect(() => {
         let note = document.getElementById("Email-note");
     
-        setTimeout(() => {
-            if (note !== null) note.style.display = 'none'
-        }, 4800 );
+        setTimeout(() => { note.style.display = 'none' }, 4800 );
     });
     
-    // To check if the user already has an account on the device to prevent creating and inviting multiple acccount on the same device.
+    // To check if the user already has an account on the device to prevent creating and inviting multiple acccounts on the same device.
 
     let alreadyReg = localStorage.getItem("username") || localStorage.getItem("inviteLink");
     let [warning, setWarning] = useState("");
@@ -50,6 +48,17 @@ const Register = () => {
 
     const handleRegister = async (event) => {
         event.preventDefault();
+        setLoading(true)
+        var timer = setInterval(() => {
+            if (responded) {
+                clearInterval(timer);
+                setLoading(false);
+            } else {
+                if (seconds > 0) seconds--;
+                setSeconds(seconds);
+            }
+        }, 1000);
+
 
         // Regular expression to check for invalid characters in the username
         let usernameVal = /^[a-zA-Z0-9._]+$/;
@@ -138,61 +147,75 @@ const Register = () => {
             <div className="w-full md:w-1/2 flex flex-col items-center justify-center bg-gray-400">
                 <h1 className="block md:hidden mb-6 text-4xl font-bold text-dark">Invicon</h1>
                 <div className="bg-gray-300 p-8 rounded shadow-md w-3/4 animate__animated animate__fadeInRight">
-                    <h3 className="mb-6 text-2xl font-bold text-dark">Register</h3>
-                    <form onSubmit={handleRegister}>
-                        <div className="mb-4 text-left">
-                            <label htmlFor="exampleInputName" className="block text-sm font-bold mb-2">
-                                Username:
-                            </label>
-                            <input
-                                type="text"
-                                minLength="3"
-                                maxLength="14"
-                                placeholder="Create username"
-                                className="form-control block w-full bg-gray-200 px-3 py-2 border border-gray-500 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                id="exampleInputName"
-                                onChange={(event) => setName(event.target.value)}
-                                required
-                            />
-                            {usernameError && <p className="text-red-500 text-sm mt-1">{usernameError}</p>}
-                        </div>
-                        <div className="mb-4 text-left">
-                            <label htmlFor="exampleInputEmai1" className="block text-sm font-bold mb-2">
-                                Email (optional):
-                            </label>
-                            <input
-                                type="email"
-                                minLength="12"
-                                maxLength="35"
-                                placeholder="Enter email"
-                                className="form-control block w-full bg-gray-200 px-3 py-2 border border-gray-500 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                id="exampleInputEmail1"
-                                onChange={(event) => setEmail(event.target.value)}
-                            />
-                        </div>
-                            <p id="Email-note"> Ensure you remember your password if you don't put in your email. </p>
-                        <div className="relative mb-6 text-left">
-                            <label htmlFor="exampleInputPassword1" className="block text-sm font-bold mb-2">
-                                Password:
-                            </label>
-                            <input
-                                type={passwordVisible ? "text" : "password"}
-                                minLength="4"
-                                maxLength="21"
-                                placeholder="Create password"
-                                className="form-control block w-full bg-gray-200 px-3 py-2 border border-gray-500 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                id="exampleInputPassword1"
-                                onChange={(event) => setPassword(event.target.value)}
-                                required
-                            />
-                            <button type="button" className="absolute right-3 bottom-2 p-1" onClick={togglePasswordVisibility}>
-                                {passwordVisible ? <FaEye className="w-4 h-4" /> : <FaEyeSlash className="w-4 h-4" />}
-                            </button>
-                        </div>
-                        {warning && <p className="text-red-500 text-sm mt-1">{warning}</p>}
-                        <button type="submit" disabled={loading} className="w-full bg-dark text-white py-2 rounded-md transition duration-300 ease-in-out transform hover:scale-100">  { loading ? <div className="dots-loader m-auto"></div> : "Register"} </button>
-                    </form>
-                    <p className="my-4 mx-2 sm:text-sm">Already have an account? <Link to='/login' className='text-dark'>Log in</Link></p>
+                    { !loading ? (
+                        <>
+                        <h3 className="mb-6 text-2xl font-bold text-dark">Register</h3>
+                        <form onSubmit={handleRegister}>
+                            <div className="mb-4 text-left">
+                                <label htmlFor="exampleInputName" className="block text-sm font-bold mb-2">
+                                    Username:
+                                </label>
+                                <input
+                                    type="text"
+                                    minLength="3"
+                                    maxLength="14"
+                                    placeholder="Create username"
+                                    className="form-control block w-full bg-gray-200 px-3 py-2 border border-gray-500 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                    id="exampleInputName"
+                                    onChange={(event) => setName(event.target.value)}
+                                    required
+                                />
+                                {usernameError && <p className="text-red-500 text-sm mt-1">{usernameError}</p>}
+                            </div>
+                            <div className="mb-4 text-left">
+                                <label htmlFor="exampleInputEmai1" className="block text-sm font-bold mb-2">
+                                    Email (optional):
+                                </label>
+                                <input
+                                    type="email"
+                                    minLengh="12"
+                                    maxLength="35"
+                                    placeholder="Enter email"
+                                    className="form-control block w-full bg-gray-200 px-3 py-2 border border-gray-500 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                    id="exampleInputEmail1"
+                                    onChange={(event) => setEmail(event.target.value)}
+                                />
+                            </div>
+                              <p id="Email-note"> Ensure you remember your password if you don't put in your email. </p>
+                            <div className="relative mb-6 text-left">
+                                <label htmlFor="exampleInputPassword1" className="block text-sm font-bold mb-2">
+                                    Password:
+                                </label>
+                                <input
+                                    type={passwordVisible ? "text" : "password"}
+                                    minLength="4"
+                                    maxLength="17"
+                                    placeholder="Create password"
+                                    className="form-control block w-full bg-gray-200 px-3 py-2 border border-gray-500 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                    id="exampleInputPassword1"
+                                    onChange={(event) => setPassword(event.target.value)}
+                                    required
+                                />
+                                <button type="button" className="absolute right-3 bottom-2 p-1" onClick={togglePasswordVisibility}>
+                                    {passwordVisible ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
+                                </button>
+                            </div>
+                            {warning && <p className="text-red-500 text-sm mt-1">{warning}</p>}
+                            <button type="submit" className="w-full bg-dark text-white py-2 rounded-md transition duration-300 ease-in-out transform hover:scale-105"> Register </button>
+                        </form>
+                        <p className="my-4 mx-2">Already have an account? <Link to='/login' className='text-dark'>Log in</Link></p>
+                        </>
+                    ) : (
+                        <>
+                            <h4 className="mb-6 text-xl font-bold text-dark">Server is slow right now. Please wait a minute.</h4>
+                            <br />
+                            <center>
+                                <div className="loader"></div>
+                                <br />
+                                <p>{seconds}</p>
+                            </center>
+                        </>
+                    )}
                 </div>
             </div>
         </div>

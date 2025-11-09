@@ -20,8 +20,8 @@ const Header = () => {
 };
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
-    let {username} = useContext(UserContext);
-    let inviteLink = localStorage.getItem("inviteLink");
+    const {username} = useContext(UserContext);
+    const inviteLink = localStorage.getItem("inviteLink");
     let code = "ABC123";
     
     if (inviteLink) code = inviteLink.slice(-8);
@@ -110,7 +110,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 const InviteLinkGeneration = () => {
     const [inviteLink, setInviteLink] = useState('');
     const [error, setError] = useState('');
-    let {username} = useContext(UserContext);
+    const {username} = useContext(UserContext);
     const navigateTo = useNavigate();
 
     useEffect(() => {
@@ -156,16 +156,20 @@ const InviteLinkGeneration = () => {
                 {error && <p className="text-base text-red-500">Error generating invite link</p>}
                 {username ? (
                     <>
-                    <div className="Link bg-gray-200 dark:bg-gray-800 rounded-md px-4 py-2 text-lg font-medium text-gray-700 dark:text-white">
+                    { !error && (
+                    <>
+                    <div onClick={handleCopy} className="Link bg-gray-200 dark:bg-gray-800 rounded-md px-4 py-2 text-lg font-medium text-gray-700 dark:text-white">
                         {inviteLink} 
                     </div>
                     <button id="copyB" onClick={handleCopy}>
                         Copy
                     </button>
                     </>
+                    )}
+                    </>
                 ) : (
                     <>
-                    <p id="No-login" className="text-sm"> You need to be signed in to genereate a link </p>
+                    <p id="No-login" className="text-sm"> You need to be signed in to generate a link </p>
                     <button id="loginB" onClick={() => navigateTo('/login')}> Log in </button>
                     </>
                 )}
@@ -176,13 +180,19 @@ const InviteLinkGeneration = () => {
 
 let InviteChecker = () => {
     const inviteId = localStorage.getItem("usedInvite");
-    let {username} = useContext(UserContext);
+    const {username} = useContext(UserContext);
 
     if (inviteId === "null") {
         return
     }
 
+    const ping = async () => {
+        await fetch('https://invicon-server-x4ff.onrender.com/ping').then(() => console.log("Server awake")).catch(() => console.warn("Could not connect to server"))
+    }
+
     useEffect(() => {
+        ping()
+
         if (username) {
             const check = async () => {
                 try {
@@ -572,9 +582,6 @@ const Home = () => {
                     </div>
                 </div>
             </main>
-            <a href="https://discord.gg/vpC9zXYdBd" target="_blank">
-                <FaDiscord id="discord" className="h-8 w-8" />
-            </a>
         </div>
         
         {isPaymentConOpen && (
