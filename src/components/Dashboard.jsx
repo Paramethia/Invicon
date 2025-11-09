@@ -106,14 +106,16 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 };
 
 const Dashboard = () => {
-    let { username, darkMode, setDarkMode } = useContext(UserContext);
+    const { username, darkMode, setDarkMode } = useContext(UserContext);
     const [invitees, setInvitees] = useState([]);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     const darkModeStyles = { backgroundColor: '#101424' };
     const lightModeStyles = { backgroundColor: '#ffffff' }
 
+    const effectRan = useRef(false);
     useEffect(() => {
+        if (effectRan.current) return;
         const fetchInvitees = async () => {
             try {
                 const response = await axios.post('https://invicon-server-x4ff.onrender.com/invites', { username });
@@ -126,7 +128,8 @@ const Dashboard = () => {
                 console.error("Error fetching invitees:", error);
             }
         }
-        if (username) fetchInvitees()
+        if (username) fetchInvitees();
+        effectRan.current = true;
     }, [username]);
 
     const toggleTheme = () => { 

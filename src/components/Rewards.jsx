@@ -223,8 +223,10 @@ const Rewards = () => {
   const darkModeStyles = { backgroundColor: '#101424' };
   const lightModeStyles = { backgroundColor: '#ffffff' };
   const [isPaymentConOpen, setIsPaymentConOpen] = useState(false);
-
+  
+  const effectRan = useRef(false);
   useEffect(() => {
+    if (effectRan.current) return;
     const fetchTier = async () => {
         try {
             const response = await axios.post('https://invicon-server-x4ff.onrender.com/getTier', { username });
@@ -240,7 +242,7 @@ const Rewards = () => {
     };
 
     if (username) fetchTier();
-    
+    effectRan.current = true;
   }, []);
 
   const toggleTheme = () => { 

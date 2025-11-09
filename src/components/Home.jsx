@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext, useEffect, useRef } from 'react';
 import { Helmet } from "react-helmet";
 import { Link} from 'react-router-dom';
 import axios from 'axios';
@@ -111,16 +111,18 @@ const InviteLinkGeneration = () => {
     const [inviteLink, setInviteLink] = useState('');
     const [error, setError] = useState('');
     const {username} = useContext(UserContext);
+    const effectRan = useRef(false);
     const navigateTo = useNavigate();
 
     useEffect(() => {
-       let existingLink = localStorage.getItem('inviteLink');
-       if (existingLink && existingLink.includes('invicon.lol')) existingLink = existingLink.replace('invicon.lol', 'invicon.netlify.app') // Because I am no long paying for the domain
-       if (existingLink) {
+        if (effectRan.current) return;
+        let existingLink = localStorage.getItem('inviteLink');
+        if (existingLink && existingLink.includes('invicon.lol')) existingLink = existingLink.replace('invicon.lol', 'invicon.netlify.app') // Because I am no long paying for the domain
+        if (existingLink) {
             setInviteLink(existingLink);
-       } else {
+        } else {
            const fetchInviteLink = async () => {
-             try {
+            try {
                 const response = await axios.post('https://invicon-server-x4ff.onrender.com/generate-invite', {username});
                 setInviteLink(response.data.inviteLink);
                 localStorage.setItem('inviteLink', response.data.inviteLink);
@@ -130,6 +132,7 @@ const InviteLinkGeneration = () => {
             }
         };
         if (username) fetchInviteLink()
+        effectRan.current = true;
       }
     }, [username]);
     
@@ -159,7 +162,7 @@ const InviteLinkGeneration = () => {
                     <>
                     { !error && (
                     <>
-                    <div onClick={handleCopy} className="Link bg-gray-200 dark:bg-gray-800 rounded-md md:px-4 px-2 py-2 md:text-lg font-medium text-gray-700 dark:text-white">
+                    <div onClick={handleCopy} className="Link bg-gray-200 dark:bg-gray-800 rounded-md px-2 md:px-4 py-2 md:text-lg font-medium text-gray-700 dark:text-white">
                         {inviteLink} 
                     </div>
                     <button id="copyB" onClick={handleCopy}>
@@ -182,6 +185,7 @@ const InviteLinkGeneration = () => {
 let InviteChecker = () => {
     const inviteId = localStorage.getItem("usedInvite");
     const {username} = useContext(UserContext);
+    const effectRan = useRef(false);
 
     if (inviteId === "null") {
         return
@@ -192,6 +196,7 @@ let InviteChecker = () => {
     }
 
     useEffect(() => {
+        if (effectRan.current) return;
         ping()
 
         if (username) {
@@ -210,8 +215,9 @@ let InviteChecker = () => {
             };
 
             if (inviteId) check()
+            effectRan.current = true;
         }
-    }, [username]);
+    }, []);
 };
 
 const PaymentOptions = ({ open, username, selectedTier, availableTiers }) => {
@@ -350,8 +356,9 @@ const Home = () => {
 
     const toggleSidebar = () => { setIsSidebarOpen(!isSidebarOpen) }
 
+    const effectRan = useRef(false);
     useEffect(() => {
-
+        if (effectRan.current) return;
         const fetchInviteData = async () => {
             try {
                 const response = await axios.post('https://invicon-server-x4ff.onrender.com/invite-data', {username});
@@ -367,7 +374,8 @@ const Home = () => {
         setTimeout(() => {
             if (username) fetchInviteData()
         }, 428);
-    }, [username]);
+        effectRan.current = true;
+    }, []);
 
     const tierSelection = (event) => setSelectedTier(event.target.value);
 
