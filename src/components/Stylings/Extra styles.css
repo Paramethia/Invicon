@@ -415,6 +415,7 @@ hr {
     }
 
     #copyB { display: none }
+    .Link { padding: 3px }
     .Link:hover { background-color: #3e97ec }
 
     /* Rewards page */
