@@ -159,7 +159,7 @@ const InviteLinkGeneration = () => {
                     <>
                     { !error && (
                     <>
-                    <div onClick={handleCopy} className="Link bg-gray-200 dark:bg-gray-800 rounded-md px-4 py-2 text-lg font-medium sm:text-sm text-gray-700 dark:text-white">
+                    <div onClick={handleCopy} className="Link bg-gray-200 dark:bg-gray-800 rounded-md md:px-4 px-2 py-2 md:text-lg font-medium text-gray-700 dark:text-white">
                         {inviteLink} 
                     </div>
                     <button id="copyB" onClick={handleCopy}>
