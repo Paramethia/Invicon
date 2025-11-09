@@ -43,7 +43,6 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
   return (
     <>
-
     <Header />
 
     <ToastContainer />

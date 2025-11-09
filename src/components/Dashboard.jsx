@@ -130,7 +130,7 @@ const Dashboard = () => {
         }
         if (username) fetchInvitees();
         effectRan.current = true;
-    }, [username]);
+    }, []);
 
     const toggleTheme = () => { 
         setDarkMode(!darkMode);

@@ -187,9 +187,7 @@ let InviteChecker = () => {
     const {username} = useContext(UserContext);
     const effectRan = useRef(false);
 
-    if (inviteId === "null") {
-        return
-    }
+    if (inviteId === "null") return
 
     const ping = async () => {
         await fetch('https://invicon-server-x4ff.onrender.com/ping').then(() => console.log("Server awake")).catch(() => console.warn("Could not connect to server"))
@@ -373,7 +371,7 @@ const Home = () => {
             
         setTimeout(() => {
             if (username) fetchInviteData()
-        }, 428);
+        }, 728);
         effectRan.current = true;
     }, []);
 
