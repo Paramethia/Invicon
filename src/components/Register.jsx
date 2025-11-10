@@ -35,12 +35,12 @@ const Register = () => {
 
     useEffect(() => {
         let note = document.getElementById("Email-note");
-        setTimeout(() => { note.style.display = 'none' }, 4800 );
+        setTimeout(() => { if (note) note.style.display = 'none' }, 4800 );
     });
     
-    // To check if the user already has an account on the device to prevent creating and inviting multiple acccounts on the same device.
+    // To check if the user already has an account on the device to prevent creating and inviting multiple acccounts on the same device/browser.
 
-    let alreadyReg = localStorage.getItem("username") || localStorage.getItem("inviteLink");
+    const alreadyReg = localStorage.getItem("username") || localStorage.getItem("inviteLink");
     let [warning, setWarning] = useState("");
 
     const togglePasswordVisibility = () => {
@@ -52,6 +52,7 @@ const Register = () => {
             if (responded || seconds === 0) {
                 clearInterval(timer);
                 setLoading(false);
+                setSeconds(55);
             } else {
                 seconds--;
                 setSeconds(seconds);
