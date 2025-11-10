@@ -123,13 +123,13 @@ const Login = () => {
                         </>
                     ) : (
                         <>
-                            <h4 className="mb-6 font-bold text-dark">Server is slow right now. Please wait a minute.</h4>
+                        <h4 className="mb-6 font-bold text-dark">Server is slow right now. Please wait a minute.</h4>
+                        <br />
+                        <center>
+                            <div className="loader"></div>
                             <br />
-                            <center>
-                                <div className="loader"></div>
-                                <br />
-                                <p>{seconds}</p>
-                            </center>
+                            <p>{seconds}</p>
+                        </center>
                         </>
                     )}
                 </div>

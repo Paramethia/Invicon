@@ -29,7 +29,9 @@ const Register = () => {
     let [passwordVisible, setPasswordVisible] = useState(false);
     const [usernameError, setUsernameError] = useState('');
     const navigate = useNavigate();
+    let [responded, setResponded] = useState(false);
     const [loading, setLoading] = useState(false);
+    let [seconds, setSeconds] =  useState(59)
 
     useEffect(() => {
         let note = document.getElementById("Email-note");
@@ -48,7 +50,7 @@ const Register = () => {
 
     const handleRegister = async (event) => {
         event.preventDefault();
-        setLoading(true)
+
         var timer = setInterval(() => {
             if (responded) {
                 clearInterval(timer);
@@ -58,7 +60,6 @@ const Register = () => {
                 setSeconds(seconds);
             }
         }, 1000);
-
 
         // Regular expression to check for invalid characters in the username
         let usernameVal = /^[a-zA-Z0-9._]+$/;
@@ -106,9 +107,7 @@ const Register = () => {
                         theme: "dark",
                         transition: Flip,
                     });
-                    setTimeout(() => {
-                        navigate('/login');
-                    }, 4400);
+                    setTimeout(() => { navigate('/login') }, 4400);
                 } else if (response.data === "Username already taken.") {
                     setUsernameError("Username already in use.")
                 } else if (response.data === "Registered.") {
@@ -128,7 +127,7 @@ const Register = () => {
                     draggable: false,
                     theme: "dark"
                 });
-            } finally { setLoading(false) }
+            } finally { setResponded(true) }
         }   
     }
    
@@ -207,13 +206,13 @@ const Register = () => {
                         </>
                     ) : (
                         <>
-                            <h4 className="mb-6 text-xl font-bold text-dark">Server is slow right now. Please wait a minute.</h4>
+                        <h4 className="mb-6 text-xl font-bold text-dark">Server is slow right now. Please wait a minute.</h4>
+                        <br />
+                        <center>
+                            <div className="loader"></div>
                             <br />
-                            <center>
-                                <div className="loader"></div>
-                                <br />
-                                <p>{seconds}</p>
-                            </center>
+                            <p>{seconds}</p>
+                        </center>
                         </>
                     )}
                 </div>
