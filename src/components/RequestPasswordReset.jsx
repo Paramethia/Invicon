@@ -35,7 +35,7 @@ const RequestPasswordReset = () => {
       }
     } catch (error) {
       if (error.response && error.response.status === 404) {
-        toast.error('Email not found, dawg.', {
+        toast.error('Email not found.', {
           position: "top-center",
           autoClose: 2800,
           hideProgressBar: false,
@@ -47,7 +47,7 @@ const RequestPasswordReset = () => {
           transition: Bounce,
         });
       } else {
-        toast.error('An error occurred. Please try again.', {
+        toast.error('This currently does not work', {
           position: "top-center",
           autoClose: 2800,
           hideProgressBar: false,
