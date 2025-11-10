@@ -71,7 +71,7 @@ const RequestPasswordReset = () => {
       <div className="hidden md:block md:w-1/2 bg-auto" style={{ backgroundImage: 'url(https://res.cloudinary.com/dw7w2at8k/image/upload/v1720626946/Home_1_d6rirw.png)' }}></div>
       <div className="w-full md:w-1/2 flex flex-col items-center justify-center bg-gray-400">
         <h1 className="block md:hidden mb-6 text-4xl font-bold text-dark">Invicon</h1>
-        <div className="bg-300 p-8 rounded shadow-md w-3/4 animate__animated animate__fadeInRight">
+        <div className="bg-gray-300 p-8 rounded shadow-md w-3/4 animate__animated animate__fadeInRight">
           <form onSubmit={handleSubmit}>
             <div className="mb-4 text-left">Reset password
               <input
