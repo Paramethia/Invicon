@@ -31,11 +31,10 @@ const Register = () => {
     const navigate = useNavigate();
     let [responded, setResponded] = useState(false);
     const [loading, setLoading] = useState(false);
-    let [seconds, setSeconds] =  useState(59)
+    let [seconds, setSeconds] =  useState(59);
 
     useEffect(() => {
         let note = document.getElementById("Email-note");
-    
         setTimeout(() => { note.style.display = 'none' }, 4800 );
     });
     
@@ -48,41 +47,37 @@ const Register = () => {
         setPasswordVisible(!passwordVisible);
     };
 
-    const handleRegister = async (event) => {
-        event.preventDefault();
-
+    function awaitResponse() {
         var timer = setInterval(() => {
-            if (responded) {
+            if (responded || seconds === 0) {
                 clearInterval(timer);
                 setLoading(false);
             } else {
-                if (seconds > 0) seconds--;
+                seconds--;
                 setSeconds(seconds);
             }
-        }, 1000);
+        }, 1000)
+    }
+
+    const handleRegister = async (event) => {
+        event.preventDefault();
 
         // Regular expression to check for invalid characters in the username
-        let usernameVal = /^[a-zA-Z0-9._]+$/;
+        const usernameVal = /^[a-zA-Z0-9._]+$/;
 
         // Check for spaces or invalid characters in the username
         if (!usernameVal.test(username)) {
             setUsernameError("Username cannot have empty spaces, emojis, or other invalid characters.");
             return;
-        } else {
-            setUsernameError(''); // Clear the error if the username is valid
-        }
+        } else { setUsernameError('') }
 
         if (alreadyReg) {
             setWarning("You cannot create another account while already registered on this device. Log in or reset your password if you forgot.");
-            setTimeout(() => {
-                navigate('/login');
-            }, 5800);
+            setTimeout(() => { navigate('/login') }, 5800);
             return
         } else if (usedInvite != null && alreadyReg) {
             setWarning("You cannot use invite links if you already registered on this device.");
-            setTimeout(() => {
-                navigate('/login');
-            }, 4850);
+            setTimeout(() => { navigate('/login') }, 4850);
             return
         } else {
             // Construct the request body based on whether email is provided
@@ -91,7 +86,7 @@ const Register = () => {
                 password,
                 usedInvite
             };
-            if (email) { requestBody.email = email }
+            if (email) requestBody.email = email
     
             try {
                 setLoading(true);
@@ -133,11 +128,8 @@ const Register = () => {
    
     return (
         <>
-        
         <Header />
-
         <ToastContainer />
-
         <div className="flex h-screen overflow-hidden">
             <div 
                 className="hidden md:flex items-center justify-center md:w-1/2 bg-auto bg-black" 
@@ -151,9 +143,7 @@ const Register = () => {
                         <h3 className="mb-6 text-2xl font-bold text-dark">Register</h3>
                         <form onSubmit={handleRegister}>
                             <div className="mb-4 text-left">
-                                <label htmlFor="exampleInputName" className="block text-sm font-bold mb-2">
-                                    Username:
-                                </label>
+                                <label htmlFor="exampleInputName" className="block text-sm font-bold mb-2"> Username: </label>
                                 <input
                                     type="text"
                                     minLength="3"
@@ -172,7 +162,7 @@ const Register = () => {
                                 </label>
                                 <input
                                     type="email"
-                                    minLengh="12"
+                                    minLength="12"
                                     maxLength="35"
                                     placeholder="Enter email"
                                     className="form-control block w-full bg-gray-200 px-3 py-2 border border-gray-500 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
@@ -180,7 +170,7 @@ const Register = () => {
                                     onChange={(event) => setEmail(event.target.value)}
                                 />
                             </div>
-                              <p id="Email-note"> Ensure you remember your password if you don't put in your email. </p>
+                                <p id="Email-note"> Ensure you remember your password if you don't put in your email. </p>
                             <div className="relative mb-6 text-left">
                                 <label htmlFor="exampleInputPassword1" className="block text-sm font-bold mb-2">
                                     Password:
@@ -196,11 +186,11 @@ const Register = () => {
                                     required
                                 />
                                 <button type="button" className="absolute right-3 bottom-2 p-1" onClick={togglePasswordVisibility}>
-                                    {passwordVisible ? <FaEyeSlash className="w-4 h-4" /> : <FaEye className="w-4 h-4" />}
+                                    {passwordVisible ? <FaEye className="w-4 h-4" /> : <FaEyeSlash className="w-4 h-4" />}
                                 </button>
                             </div>
                             {warning && <p className="text-red-500 text-sm mt-1">{warning}</p>}
-                            <button type="submit" className="w-full bg-dark text-white py-2 rounded-md transition duration-300 ease-in-out transform hover:scale-105"> Register </button>
+                            <button type="submit" disabled={loading} className="w-full bg-dark text-white py-2 rounded-md transition duration-300 ease-in-out transform hover:scale-105"> {loading ? <div className="dots-loader m-auto"></div> : "Register"} </button>
                         </form>
                         <p className="my-4 mx-2">Already have an account? <Link to='/login' className='text-dark'>Log in</Link></p>
                         </>
@@ -213,8 +203,9 @@ const Register = () => {
                             <br />
                             <p>{seconds}</p>
                         </center>
+                        { awaitResponse() }
                         </>
-                    )}
+                    )};
                 </div>
             </div>
         </div>
