@@ -105,7 +105,8 @@ const Register = () => {
                     });
                     setTimeout(() => { navigate('/login') }, 4400);
                 } else if (response.data === "Username already taken.") {
-                    setUsernameError("Username already in use.")
+                    setUsernameError("Username already in use.");
+                    setTimeout(() => { setUsernameError(''), 3400 })
                 } else if (response.data === "Registered.") {
                     localStorage.setItem('usedInvite', usedInvite);
                     localStorage.setItem("username", username);
