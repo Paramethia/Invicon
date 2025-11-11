@@ -109,7 +109,6 @@ const Login = () => {
                         </div>
                         <button type="submit" disabled={loading} className="w-full bg-dark text-white py-2 rounded-md transition duration-300 ease-in-out transform hover:scale-105"> {loading ? <div className="dots-loader m-auto"></div> : "Log in"} </button>
                     </form>
-                    
                     <p className="my-4  flex"> Don't have an account? <Link to='/register' className='text-dark mx-2'> Register </Link></p>
                     <p><Link to='/request' className='text-dark'>I forgot the Password</Link></p>
                 </div>

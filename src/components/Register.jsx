@@ -206,11 +206,10 @@ const Register = () => {
                         </center>
                         { awaitResponse() }
                         </>
-                    )};
+                    )}
                 </div>
             </div>
         </div>
-
         </>
     );
 }

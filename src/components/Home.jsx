@@ -44,7 +44,6 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
     return (
         <>
-
         <Header />
 
         <aside
@@ -102,7 +101,6 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
                 </div>
             </div>
         </aside>
-
         </>
     );
 };
@@ -403,7 +401,6 @@ const Home = () => {
 
     return (
         <>
-
         <InviteChecker />
 
         <div className="flex h-screen">
