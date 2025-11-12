@@ -219,6 +219,8 @@ let InviteChecker = () => {
 
 const PaymentOptions = ({ open, username, selectedTier, availableTiers }) => {
     let [loading, setLoading] = useState(false);
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [orderId, setOrderId] = useState(null);
     
     const buyTier = async () => {
         if (!username) {
@@ -237,57 +239,74 @@ const PaymentOptions = ({ open, username, selectedTier, availableTiers }) => {
         }
 
         // Set tier and price dynamically from button click
-        const selected = availableTiers.find(t => t.tier === selectedTier);
-        if (!selected) return;
+        const sTier = availableTiers.find(t => t.tier === selectedTier);
+        if (!sTier) return;
 
-        const { tier, price } = selected;
+        const price = sTier.price;
 
         try {
             setLoading(true)
             // Create Order
             const res = await axios.post("https://invicon-server-x4ff.onrender.com/create-order", { price });
-            const orderId = res.data.orderId;
+            setOrderId(res.data.orderId);
 
-            // Redirect to PayPal
+            // Redirect to PayPal sandbox (fake payments cause this is just a practice site)
             const approvalUrl = `https://www.sandbox.paypal.com/checkoutnow?token=${orderId}`;
             window.open(approvalUrl, "_blank");
 
-            // Wait for user to finish, then ask for confirmation
-            const userConfirmed = window.confirm("After completing the payment, click OK to finalize.");
-
-            if (userConfirmed) {
-                // Step 4: Capture Order and Update Tier
-                const captureRes = await axios.post("https://invicon-server-x4ff.onrender.com/capture-order", {
-                    orderId,
-                    username,
-                    tier: parseInt(tier.split(' ')[1]) // Tier 1 → 1
-                });
-
-                if (captureRes.data.message) {
-                    toast.success("Tier bought!", {
-                        position: "top-center",
-                        autoClose: 2000,
-                        pauseOnHover: false,
-                        theme: "dark",
-                        transition: Zoom
-                    });
-                    setTimeout(() => { window.location.reload() }, 2100 )
-                }
-            }
+            setShowConfirmModal(true);
         } catch (err) {
             console.error(err);
-            toast.error("Something went wrong with the payment", {
+            toast.error("Could not initialize the payment", {
                 position: "top-center",
                 autoClose: 3000,
                 pauseOnHover: false,
-                hideProgressBar: true
+                draggable: false,
+                hideProgressBar: true,
+                theme: "dark"
             });
         } finally {
             setLoading(false)
         }
     };
 
+    const finalizePayment = async () => {
+        if (!orderId || !tierData) return;
+
+        try {
+            setLoading(true);
+            const captureRes = await axios.post("https://invicon-server-x4ff.onrender.com/capture-order", {
+                orderId,
+                username,
+                tier: parseInt(selectedTier.split(' ')[1])
+            });
+
+            if (captureRes.data.message) {
+                toast.success("Tier bought!", {
+                    position: "top-center",
+                    autoClose: 2000,
+                    pauseOnHover: false,
+                    theme: "dark",
+                    transition: Slide
+                });
+                setShowConfirmModal(false);
+                setTimeout(() => window.location.reload(), 2100);
+            }
+        } catch (err) {
+            console.error(err);
+            toast.error("Could not finalize payment", {
+                position: "top-center",
+                autoClose: 3000,
+                pauseOnHover: false,
+                hideProgressBar: true
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
+        <>
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-8 overflow-y-auto">
             <div className="Payment-options bg-gray-300 dark:bg-gray-800 rounded-lg p-6 relative">
                 <button onClick={() => open(false)} className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 dark:hover:text-white">
@@ -313,6 +332,24 @@ const PaymentOptions = ({ open, username, selectedTier, availableTiers }) => {
                 </div>
             </div>
         </div>
+
+        {showConfirmModal && (
+            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-10">
+                <div className="bg-gray-200 dark:bg-gray-800 rounded-lg p-6 w-[90%] max-w-sm text-center">
+                    <h3 className="text-lg font-semibold text-gray-700 dark:text-white mb-4"> Complete your payment </h3>
+                    <p className="text-gray-600 dark:text-gray-300 mb-6"> After completing your PayPal payment, click below to finalize your purchase. </p>
+                    <div className="flex justify-center gap-4">
+                        <button onClick={() => setShowConfirmModal(false)} className="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500">
+                            Cancel
+                        </button>
+                        <button onClick={finalizePayment} className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600" disabled={loading}>
+                            {loading ? "Finalizing..." : "Confirm Payment"}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        )}
+        </>
     );
 }
 
