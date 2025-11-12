@@ -249,11 +249,11 @@ const PaymentOptions = ({ open, username, selectedTier, availableTiers }) => {
             const res = await axios.post("https://invicon-server-x4ff.onrender.com/create-order", { price });
             setOrderId(res.data.orderId);
 
+            if (res.data.orderId) setShowConfirmModal(true);
+            
             // Redirect to PayPal sandbox (fake payments 'cause this is just a practice site)
             const approvalUrl = `https://www.sandbox.paypal.com/checkoutnow?token=${res.data.orderId}`;
             window.open(approvalUrl, "_blank");
-
-            setShowConfirmModal(true);
         } catch (err) {
             console.error(err);
             toast.error("Could not initialize the payment", {
