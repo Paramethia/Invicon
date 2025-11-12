@@ -221,8 +221,13 @@ const PaymentOptions = ({ open, username, selectedTier, availableTiers }) => {
     let [loading, setLoading] = useState(false);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [orderId, setOrderId] = useState(null);
+
+    const tier = availableTiers.find(t => t.tier === selectedTier);
+    const price = tier?.price;
     
     const buyTier = async () => {
+        if (!tier) return;
+
         if (!username) {
             toast.warn("Log in first before buying", {
                 position: "top-center",
@@ -238,20 +243,14 @@ const PaymentOptions = ({ open, username, selectedTier, availableTiers }) => {
             return;
         }
 
-        // Set tier and price dynamically from button click
-        const sTier = availableTiers.find(t => t.tier === selectedTier);
-        if (!sTier) return;
-
-        const price = sTier.price;
-
         try {
             setLoading(true)
             // Create Order
             const res = await axios.post("https://invicon-server-x4ff.onrender.com/create-order", { price });
             setOrderId(res.data.orderId);
 
-            // Redirect to PayPal sandbox (fake payments cause this is just a practice site)
-            const approvalUrl = `https://www.sandbox.paypal.com/checkoutnow?token=${orderId}`;
+            // Redirect to PayPal sandbox (fake payments 'cause this is just a practice site)
+            const approvalUrl = `https://www.sandbox.paypal.com/checkoutnow?token=${res.data.orderId}`;
             window.open(approvalUrl, "_blank");
 
             setShowConfirmModal(true);
@@ -271,7 +270,7 @@ const PaymentOptions = ({ open, username, selectedTier, availableTiers }) => {
     };
 
     const finalizePayment = async () => {
-        if (!orderId || !tierData) return;
+        if (!orderId || !tier) return;
 
         try {
             setLoading(true);
@@ -296,7 +295,7 @@ const PaymentOptions = ({ open, username, selectedTier, availableTiers }) => {
             console.error(err);
             toast.error("Could not finalize payment", {
                 position: "top-center",
-                autoClose: 3000,
+                autoClose: 5000,
                 pauseOnHover: false,
                 hideProgressBar: true
             });
@@ -337,13 +336,13 @@ const PaymentOptions = ({ open, username, selectedTier, availableTiers }) => {
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-10">
                 <div className="bg-gray-200 dark:bg-gray-800 rounded-lg p-6 w-[90%] max-w-sm text-center">
                     <h3 className="text-lg font-semibold text-gray-700 dark:text-white mb-4"> Complete your payment </h3>
-                    <p className="text-gray-600 dark:text-gray-300 mb-6"> After completing your PayPal payment, click below to finalize your purchase. </p>
+                    <p className="text-gray-600 dark:text-gray-300 mb-6"> After completing your PayPal payment, click "Done" below to finalize your purchase. </p>
                     <div className="flex justify-center gap-4">
                         <button onClick={() => setShowConfirmModal(false)} className="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500">
                             Cancel
                         </button>
                         <button onClick={finalizePayment} className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600" disabled={loading}>
-                            {loading ? "Finalizing..." : "Confirm Payment"}
+                            {loading ? "Finalizing..." : "Done"}
                         </button>
                     </div>
                 </div>
