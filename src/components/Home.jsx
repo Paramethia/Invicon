@@ -180,7 +180,7 @@ const InviteLinkGeneration = () => {
     );
 };
 
-let InviteChecker = () => {
+const InviteChecker = () => {
     const inviteId = localStorage.getItem("usedInvite");
     const {username} = useContext(UserContext);
     const effectRan = useRef(false);
@@ -218,12 +218,15 @@ let InviteChecker = () => {
 };
 
 const PaymentOptions = ({ open, username, selectedTier, availableTiers }) => {
-    let [loading, setLoading] = useState(false);
+    const navigateTo = useNavigate();
+    const [pLoading, setPloading] = useState(false);
+    const [sLoading, setSloading] = useState(false);
     const [showConfirmModal, setShowConfirmModal] = useState(false);
     const [orderId, setOrderId] = useState(null);
 
     const tier = availableTiers.find(t => t.tier === selectedTier);
-    const price = tier?.price;
+
+    // Paypal
     
     const buyTier = async () => {
         if (!tier) return;
@@ -244,36 +247,40 @@ const PaymentOptions = ({ open, username, selectedTier, availableTiers }) => {
         }
 
         try {
-            setLoading(true)
+            setPloading(true)
             // Create Order
-            const res = await axios.post("https://invicon-server-x4ff.onrender.com/create-order", { price });
+            const res = await axios.post("https://invicon-server-x4ff.onrender.com/create-order", { tier });
             setOrderId(res.data.orderId);
 
             if (res.data.orderId) setShowConfirmModal(true);
-            
-            // Redirect to PayPal sandbox (fake payments 'cause this is just a practice site)
+
+            // Redirect to PayPal sandbox (fake payments 'cause this is just a practice site.... and I don't have a business account yet)
             const approvalUrl = `https://www.sandbox.paypal.com/checkoutnow?token=${res.data.orderId}`;
             window.open(approvalUrl, "_blank");
+
+            // Log in with the following sandbox account:
+            /* 
+              Email: sb-zuenn44899813@personal.example.com
+              Password: o95#LJ0-
+            */
         } catch (err) {
             console.error(err);
             toast.error("Could not initialize the payment", {
                 position: "top-center",
-                autoClose: 3000,
+                autoClose: 3500,
                 pauseOnHover: false,
                 draggable: false,
                 hideProgressBar: true,
                 theme: "dark"
             });
-        } finally {
-            setLoading(false)
-        }
+        } finally { setPloading(false) }
     };
 
     const finalizePayment = async () => {
         if (!orderId || !tier) return;
 
         try {
-            setLoading(true);
+            setPloading(true);
             const captureRes = await axios.post("https://invicon-server-x4ff.onrender.com/capture-order", {
                 orderId,
                 username,
@@ -283,13 +290,13 @@ const PaymentOptions = ({ open, username, selectedTier, availableTiers }) => {
             if (captureRes.data.message) {
                 toast.success("Tier bought!", {
                     position: "top-center",
-                    autoClose: 2000,
+                    autoClose: 27000,
                     pauseOnHover: false,
                     theme: "dark",
                     transition: Slide
                 });
                 setShowConfirmModal(false);
-                setTimeout(() => window.location.reload(), 2100);
+                setTimeout(() => window.location.reload(), 4000);
             }
         } catch (err) {
             console.error(err);
@@ -299,10 +306,14 @@ const PaymentOptions = ({ open, username, selectedTier, availableTiers }) => {
                 pauseOnHover: false,
                 hideProgressBar: true
             });
-        } finally {
-            setLoading(false);
-        }
+        } finally { setPloading(false) }
     };
+
+    // Stripe
+
+    const checkout = async () => {
+        // Coming soon
+    }
 
     return (
         <>
@@ -313,8 +324,8 @@ const PaymentOptions = ({ open, username, selectedTier, availableTiers }) => {
                 </button>
                 <h2 className="text-lg font-bold text-gray-700 dark:text-white mb-4 text-center">Select Payment Method</h2>
                 <div className="grid gap-4">
-                    <button onClick={buyTier} className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600" disabled={loading}>
-                        { loading ? (
+                    <button onClick={buyTier} className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600" disabled={pLoading}>
+                        { pLoading ? (
                             <center><div className="dotted-loader"></div></center>
                         ) : (
                             <>
@@ -322,12 +333,15 @@ const PaymentOptions = ({ open, username, selectedTier, availableTiers }) => {
                             </>
                         )}
                     </button>
-                    <a href="https://www.instagram.com/poison8x/profilecard/?igsh=MWRnejFnNzRwN3U3OA==" target="_blank">
-                       <button className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"> <FaBitcoin className="inline w-6 h-6 mr-2" /> Crypto </button>
-                    </a>
-                    <a href="https://www.instagram.com/poison8x/profilecard/?igsh=MWRnejFnNzRwN3U3OA==">
-                       <button className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"> <FaWallet className="inline w-6 h-6 mr-2" /> Other </button>
-                    </a>
+                    <button onClick={checkout} className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600" disabled={sLoading}>
+                        { sLoading ? (
+                            <center><div className="dotted-loader"></div></center>
+                        ) : (
+                            <>
+                            <FaWallet className="inline w-6 h-6 mr-2" /> Other
+                            </>
+                        )}
+                    </button>
                 </div>
             </div>
         </div>
@@ -341,8 +355,8 @@ const PaymentOptions = ({ open, username, selectedTier, availableTiers }) => {
                         <button onClick={() => setShowConfirmModal(false)} className="px-4 py-2 bg-gray-400 text-white rounded-lg hover:bg-gray-500">
                             Cancel
                         </button>
-                        <button onClick={finalizePayment} className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600" disabled={loading}>
-                            {loading ? "Finalizing..." : "Done"}
+                        <button onClick={finalizePayment} className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600" disabled={pLoading}>
+                            {pLoading ? "Finalizing..." : "Done"}
                         </button>
                     </div>
                 </div>

@@ -21,9 +21,9 @@ const Header = () => {
 const Login = () => {
     const {username, setName} = useContext(UserContext);
     const [password, setPassword] = useState('');
-    let [passwordVisible, setPasswordVisibility] = useState(false);
+    const [passwordVisible, setPasswordVisibility] = useState(false);
     const navigate = useNavigate();
-    let storedUsername = localStorage.getItem("username");
+    const storedUsername = localStorage.getItem("username");
     const [loading, setLoading] = useState(false);
 
     const togglePasswordVisibility = () => setPasswordVisibility(!passwordVisible);
