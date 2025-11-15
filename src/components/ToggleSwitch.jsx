@@ -1,9 +1,5 @@
-// ToggleSwitch.js
-
-import React from 'react';
 import { FaMoon, FaSun } from 'react-icons/fa';
-import './Extra stlyles.css';
-
+import './Stylings/Extra styles.css';
 
 const ToggleSwitch = ({ isDarkMode, toggleTheme }) => {
 	return (
