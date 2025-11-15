@@ -4,11 +4,15 @@ import { Helmet } from "react-helmet";
 import { UserContext } from './UserContext';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { toast, ToastContainer, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FiHome as HomeIcon, FiGift as GiftIcon, FiUsers as UsersIcon, FiLogOut as LoutIcon, FiLogIn as LinIcon, FiMail as ConIcon, FiCopy as CopyIcon } from 'react-icons/fi';
-import { FaMoon, FaSun, FaBars, FaTimes, FaPaypal, FaBitcoin, FaWallet, FaTimesCircle } from 'react-icons/fa';
+import { FaMoon, FaSun, FaBars, FaTimes, FaPaypal, FaWallet, FaTimesCircle } from 'react-icons/fa';
 import './Stylings/Extra styles.css';
+
+const stripePromise = loadStripe("pk_test_51SRAnNIQIrM0wFMr2cJAFDUxpdaQI40zqXO91ySG8LSjklu16lbgqAHWLheNbrSBLJfMdosfmpF2IgPQcnoTM0un00SNR0WC07");
 
 const Header = () => {
 	return (
@@ -110,8 +114,6 @@ const PaymentOptions = ({ open, username, currentTier }) => {
 	const navigateTo = useNavigate();
 	const [pLoading, setPloading] = useState(false);
 	const [sLoading, setSloading] = useState(false);
-	const [showConfirmModal, setShowConfirmModal] = useState(false);
-	const [orderId, setOrderId] = useState(null);
 
 	if (!username) {
         toast.warn("Log in first before buying", {
@@ -138,6 +140,9 @@ const PaymentOptions = ({ open, username, currentTier }) => {
 	const tier = tiers.find(t => t.tier === nextTier);
 
 	// Paypal
+
+	const [showConfirmModal, setShowConfirmModal] = useState(false);
+	const [orderId, setOrderId] = useState(null);
 
 	const buyTier = async () => {
 		if (!tier) return;
@@ -200,8 +205,87 @@ const PaymentOptions = ({ open, username, currentTier }) => {
 
 	// Stripe
 
-    const checkout = async () => {
-        // Coming soon
+    const [checkingOut, setCheckingOut] = useState(false);
+
+    const Checkout = () => {
+        const stripe = useStripe();
+        const elements = useElements();
+		const [inputValid, setInputValid] = useState(false);
+		const [warning, setWarning] = useState('');
+
+        async function pay(e) {
+            e.preventDefault();
+
+			if (!inputValid) {
+                setWarning("Invalid card details");
+                setTimeout(() => { setWarning('') }, 3000 );
+                return
+            }
+
+            setSloading(true);
+            const res = await axios.post("https://invicon-server-x4ff.onrender.com/create-payment-intent", {
+                amount: tier.price * 100,
+                username,
+                tier: nextTier,
+            });
+
+            const { clientSecret } = res.data;
+
+            const result = await stripe.confirmCardPayment(clientSecret, {
+                payment_method: {
+                    card: elements.getElement(CardElement),
+                    billing_details: { name: username },
+                },
+            });
+            setSloading(false)
+
+            if (result.error) {
+                console.error(result.error.message);
+                toast.error("Payment failed", {
+                    position: "top-center",
+                    autoClose: 2500,
+                    pauseOnHover: false,
+                    hideProgressBar: true,
+                    theme: "dark",
+                });
+            } else if (result.paymentIntent.status === "succeeded") {
+                await fetch("https://invicon-server-x4ff.onrender.com/update-tier", { 
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username, tier: nextTier })
+                });
+
+                toast.success("Tier bought!", {
+                    position: "top-center",
+                    autoClose: 2250,
+                    pauseOnHover: false,
+                    hideProgressBar: false,
+                    theme: "dark",
+                });
+                setTimeout(() => { window.location.reload() }, 2555 );
+            }
+        }
+
+        return (
+            <form onSubmit={pay} className="p-4 bg-gray-800 rounded-lg">
+                <CardElement 
+                    className="p-3 bg-gray-600 rounded-md text-gray-200" 
+                    options={{
+                        style: {
+                            base: {
+                                color: "#ccc",
+                                "::placeholder": { color: "#aaa"}
+                            }
+                        }
+                    }}
+					onChange={(event) => setInputValid(event.complete)}
+                />
+				<p className="text-red-500 text-sm mt-1">{warning}</p>
+                <button type="submit" id="pay" className="mt-4 bg-gray-300 text-gray-800 py-2 px-4 rounded hover:bg-gray-400">
+                    { sLoading ? <center><div className="dotted-loader"></div></center> : `Pay $${tier.price}` }
+                </button>
+            </form>
+        )
     }
 
 	return (
@@ -220,7 +304,15 @@ const PaymentOptions = ({ open, username, currentTier }) => {
 							<> <FaPaypal className="inline w-6 h-6 mr-2" /> PayPal </>
 						)}
 					</button>
-					<button className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-600"> <FaWallet className="inline w-6 h-6 mr-2" /> Other </button>
+					{!checkingOut ? (
+						<button className="w-full bg-blue-500 text-white py-2 rounded-lg hover:bg-blue-700" onClick={() => setCheckingOut(true)} disabled={sLoading}>
+							<FaWallet className="inline w-6 h-6 mr-2" /> Card
+						</button>
+					) : (
+						<Elements stripe={stripePromise}>
+							<Checkout />
+						</Elements> 
+					)}
 				</div>
 			</div>
 		</div>
