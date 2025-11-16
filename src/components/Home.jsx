@@ -508,22 +508,19 @@ const Home = () => {
 
     const toggleSidebar = () => { setIsSidebarOpen(!isSidebarOpen) }
 
-    useEffect(() => {
-        const fetchStats = async () => {
-            try {
-                console.log("Fetching stats...");
-                const response = await axios.post('https://invicon-server-x4ff.onrender.com/fetch-stats', {username});
-                setInvites(response.data.invites);
-                setTier(response.data.tier);
-                console.log("Fetched");
-            } catch (error) {
-                console.error('Error fetching stats:', error);
-            } finally { setLoading(false) }
-        };
-            
-        console.log(username);
-        setTimeout(() => { if (username) fetchStats()}, 500 );
-    }, []);
+    const fetchStats = async () => {
+        try {
+            console.log("Fetching stats...");
+            const response = await axios.post('https://invicon-server-x4ff.onrender.com/fetch-stats', {username});
+            setInvites(response.data.invites);
+            setTier(response.data.tier);
+            console.log("Fetched");
+        } catch (error) {
+            console.error('Error fetching stats:', error);
+        } finally { setLoading(false) }
+    };
+        
+    if (username) fetchStats();
 
     const tierSelection = (event) => setSelectedTier(event.target.value);
 
