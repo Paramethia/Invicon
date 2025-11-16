@@ -521,7 +521,8 @@ const Home = () => {
             } finally { setLoading(false) }
         };
             
-        if (username) fetchStats();
+        console.log(username);
+        setTimeout(() => { if (username) fetchStats()}, 500 );
     }, []);
 
     const tierSelection = (event) => setSelectedTier(event.target.value);
