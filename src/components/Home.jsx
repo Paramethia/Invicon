@@ -525,7 +525,8 @@ const Home = () => {
             }
         };
             
-        setTimeout(() => { if (username) fetchInviteData() }, 520);
+        if (username) fetchInviteData();
+        setTimeout(() => { if (!invites || !tier) fetchInviteData }, 2000) // Try fetching invites again if is no invite data showing up after the first try (To fix stats not showing up on first load of the home page)
         effectRan.current = true;
     }, []);
 
