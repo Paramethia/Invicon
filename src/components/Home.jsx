@@ -508,9 +508,7 @@ const Home = () => {
 
     const toggleSidebar = () => { setIsSidebarOpen(!isSidebarOpen) }
 
-    const effectRan = useRef(false);
     useEffect(() => {
-        if (effectRan.current) return;
         const fetchStats = async () => {
             try {
                 console.log("Fetching stats...");
@@ -524,8 +522,6 @@ const Home = () => {
         };
             
         if (username) fetchStats();
-        setTimeout(() => { if (!invites || !tier && username) fetchStats() }, 2000) // Try fetching stats again if there are no stats showing up after the first try (To fix stats not showing up on first load of the home page)
-        effectRan.current = true;
     }, []);
 
     const tierSelection = (event) => setSelectedTier(event.target.value);
