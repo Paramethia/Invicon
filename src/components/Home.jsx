@@ -517,16 +517,14 @@ const Home = () => {
                 const response = await axios.post('https://invicon-server-x4ff.onrender.com/invite-data', {username});
                 setInvites(response.data.invites);
                 setTier(response.data.tier);
+                console.log("Fetched");
             } catch (error) {
                 console.error('Error fetching invite data', error);
-            } finally {
-                setLoading(false)
-                console.log("Fetched")
-            }
+            } finally { setLoading(false) }
         };
             
-        if (username) fetchInviteData();
-        setTimeout(() => { if (!invites || !tier) fetchStats() }, 2000) // Try fetching invites again if is no invite data showing up after the first try (To fix stats not showing up on first load of the home page)
+        if (username) fetchStats();
+        setTimeout(() => { if (!invites || !tier) fetchStats() }, 2000) // Try fetching stats again if there are no stats showing up after the first try (To fix stats not showing up on first load of the home page)
         effectRan.current = true;
     }, []);
 
