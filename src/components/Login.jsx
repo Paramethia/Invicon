@@ -41,7 +41,7 @@ const Login = () => {
                     localStorage.removeItem("inviteLink");
                 }
                 localStorage.setItem("username", username);
-                navigate('/home');
+                navigate('/');
             } else {
                 toast.error('Invalid username or password. Try again.', {
                     position: "top-center",

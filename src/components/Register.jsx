@@ -111,7 +111,7 @@ const Register = () => {
                     localStorage.setItem('usedInvite', usedInvite);
                     localStorage.setItem("username", username);
                     if (email) localStorage.setItem("email", email);
-                    navigate('/home');
+                    navigate('/');
                 }
             } catch(error) {
                 console.log("Error registering: ", error);
