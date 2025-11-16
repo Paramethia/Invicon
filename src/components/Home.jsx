@@ -520,7 +520,7 @@ const Home = () => {
         } finally { setLoading(false) }
     };
         
-    if (username) fetchStats();
+    if (username && !invites || !tier) fetchStats();
 
     const tierSelection = (event) => setSelectedTier(event.target.value);
 
