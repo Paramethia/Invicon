@@ -18,7 +18,7 @@ const Header = () => {
 };
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
-    let {username} = useContext(UserContext);
+    const {username} = useContext(UserContext);
     let inviteLink = localStorage.getItem('inviteLink');
     let code = "ABC123";
       
@@ -61,7 +61,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             </div>
 
             <nav className="Navigation flex flex-col gap-2 mb-10">
-                <Link to="/home" className="flex items-center text-white gap-2 rounded-md px-3 py-2 font-helvetica transition-colors H-effect" style={{ textDecoration: 'none' }}>
+                <Link to="/" className="flex items-center text-white gap-2 rounded-md px-3 py-2 font-helvetica transition-colors H-effect" style={{ textDecoration: 'none' }}>
                     <HomeIcon className="h-4 w-4" /> Home
                 </Link>
                 <Link to="/dashboard" className="flex text-white items-center gap-2 rounded-md px-3 py-2 font-helvetica transition-colors H-effect" style={{ textDecoration: 'underline' }}>

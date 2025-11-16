@@ -67,7 +67,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             </div>
 
             <nav className="Navigation flex flex-col gap-2 mb-10">
-                <Link to="/home" className="flex items-center text-white gap-2 rounded-md px-3 py-2 font-helvetica transition-colors H-effect" style={{ textDecoration: 'underline' }}>
+                <Link to="/" className="flex items-center text-white gap-2 rounded-md px-3 py-2 font-helvetica transition-colors H-effect" style={{ textDecoration: 'underline' }}>
                     <HomeIcon className="h-4 w-4" /> Home
                 </Link>
                 <Link to="/dashboard" className="flex text-white items-center gap-2 rounded-md px-3 py-2 font-helvetica transition-colors H-effect" style={{ textDecoration: 'none' }}>
@@ -510,17 +510,17 @@ const Home = () => {
 
     const fetchStats = async () => {
         try {
-            console.log("Fetching stats...");
+            //console.log("Fetching stats...");
             const response = await axios.post('https://invicon-server-x4ff.onrender.com/fetch-stats', {username});
             setInvites(response.data.invites);
             setTier(response.data.tier);
-            console.log("Fetched");
+            //console.log("Fetched");
         } catch (error) {
             console.error('Error fetching stats:', error);
         } finally { setLoading(false) }
     };
         
-    if (username && !invites || !tier) fetchStats();
+    if (username) fetchStats();
 
     const tierSelection = (event) => setSelectedTier(event.target.value);
 

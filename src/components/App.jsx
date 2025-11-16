@@ -10,38 +10,30 @@ import Rewards from './Rewards';
 import { UserContext } from './UserContext';
 
 function App() {
-  const [username, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [darkMode, setDarkMode] = useState(true);
+	const [username, setName] = useState(localStorage.getItem('username') || '');
+	const [email, setEmail] = useState(localStorage.getItem('email') || '');
+	const [darkMode, setDarkMode] = useState(true);
 
-  // Check local storage (cache) on app load
+	useEffect(() => {
+		const dark = localStorage.getItem("darkMode");
+		if (dark === "false") setDarkMode(false);
+	}, []);
 
-  useEffect(() => {
-    const storedUsername = localStorage.getItem('username');
-    const storedEmail = localStorage.getItem('email');
-    const savedTheme = localStorage.getItem("darkMode");
-
-    if (storedUsername) setName(storedUsername);
-    if (storedEmail) setEmail(storedEmail);
-    if (savedTheme === "false") setDarkMode(false);
-  }, []);
-
-  return (
-      <UserContext.Provider value={{ username, setName, email, setEmail, darkMode, setDarkMode }}>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/reset" element={<ResetPassword />} />
-          <Route path="/request" element={<RequestPasswordReset />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/rewards" element={<Rewards />} />
-        </Routes>
-      </Router>
-      </UserContext.Provider>
-  );
+	return (
+		<UserContext.Provider value={{ username, setName, email, setEmail, darkMode, setDarkMode }}>
+			<Router>
+				<Routes>
+					<Route path="/" element={<Home />} />
+					<Route path="/register" element={<Register />} />
+					<Route path="/login" element={<Login />} />
+					<Route path="/reset" element={<ResetPassword />} />
+					<Route path="/request" element={<RequestPasswordReset />} />
+					<Route path="/dashboard" element={<Dashboard />} />
+					<Route path="/rewards" element={<Rewards />} />
+				</Routes>
+			</Router>
+		</UserContext.Provider>
+	);
 }
 
 export default App;
