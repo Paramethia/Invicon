@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './Home';
 import Login from './Login';
@@ -12,12 +12,8 @@ import { UserContext } from './UserContext';
 function App() {
 	const [username, setName] = useState(localStorage.getItem('username') || '');
 	const [email, setEmail] = useState(localStorage.getItem('email') || '');
-	const [darkMode, setDarkMode] = useState(true);
-
-	useEffect(() => {
-		const dark = localStorage.getItem("darkMode");
-		if (dark === "false") setDarkMode(false);
-	}, []);
+	const dark = useState(localStorage.getItem("darkMode") || "true");
+	const [darkMode, setDarkMode] = useState(dark[0] === "false" ? false : true);
 
 	return (
 		<UserContext.Provider value={{ username, setName, email, setEmail, darkMode, setDarkMode }}>
