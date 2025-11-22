@@ -4,11 +4,11 @@ import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { UserContext } from './UserContext';
+import { UserContext } from '../UserContext';
 import { toast, ToastContainer } from 'react-toastify';
 import'react-toastify/dist/ReactToastify.css';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import './Stylings/Login.css';
+import '../Stylings/Login.css';
 
 const Header = () => {
     return ( 

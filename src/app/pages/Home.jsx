@@ -4,126 +4,36 @@ import { Helmet } from "react-helmet";
 import { Link} from 'react-router-dom';
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";;
-import { UserContext } from './UserContext';
+import { UserContext } from '../UserContext';
+import Sidebar from '../components/Sidebar';
 import { useNavigate } from 'react-router-dom';
 import { toast, ToastContainer, Flip, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { FiHome as HomeIcon, FiGift as GiftIcon, FiUsers as UsersIcon, FiMail as ConIcon, FiLogOut as LoutIcon, FiLogIn as LinIcon, FiCopy as CopyIcon } from 'react-icons/fi';
-import { FaMoon, FaSun, FaBars, FaTimes, FaPaypal, FaWallet, FaTimesCircle } from 'react-icons/fa';
-import './Stylings/Extra styles.css';
+import { FaMoon, FaSun, FaBars, FaPaypal, FaWallet, FaTimesCircle } from 'react-icons/fa';
+import '../Stylings/Extra styles.css';
 
 const stripePromise = loadStripe("pk_test_51SRAnNIQIrM0wFMr2cJAFDUxpdaQI40zqXO91ySG8LSjklu16lbgqAHWLheNbrSBLJfMdosfmpF2IgPQcnoTM0un00SNR0WC07");
 
 const Header = () => {
     return ( 
         <Helmet>
-            <title> Invicon - home </title>
+            <title> Invicon </title>
             <meta name="description" content="Welcome to Invicon" />
         </Helmet>
     );
 };
 
-const Sidebar = ({ isOpen, toggleSidebar }) => {
-    const {username} = useContext(UserContext);
-    const inviteLink = localStorage.getItem("inviteLink");
-    let code = "ABC123";
-    
-    if (inviteLink) code = inviteLink.slice(-8);
-
-    const logOut = () => { localStorage.removeItem('username') }
-
-    const handleCopyReferralCode = () => {
-        navigator.clipboard.writeText(inviteLink);
-        toast.success('Copied to clipboard! 🗒️', {
-           position: "top-center",
-            autoClose: 2800,
-            hideProgressBar: true,
-            closeOnClick: false,
-            pauseOnHover: false,
-            draggable: false,
-            theme: "dark",
-            transition: Slide,
-        });
-    };
-
-    return (
-        <>
-        <Header />
-
-        <aside
-          className={`w-64 bg-[#282434] text-white flex flex-col p-6 transition-transform transform ${
-            isOpen ? 'translate-x-0' : '-translate-x-full'
-          } md:translate-x-0 md:relative md:block z-40`}
-          style={{ backgroundColor: "#282434" }}
-        >
-            <div className="flex justify-between items-center mb-6">
-                <div className="text-white flex items-center gap-2">
-                    <img src="Invicon navbar logo.png" alt="Invicon Logo" className="w-8 h-8"/>
-                    <h1 className="text-xl font-bold mt-2 font-helvetica">{username}</h1>
-                </div>
-                <button className="md:hidden" onClick={toggleSidebar}>
-                    <FaTimes className="h-6 w-6 text-white" />
-                </button>
-            </div>
-
-            <nav className="Navigation flex flex-col gap-2 mb-10">
-                <Link to="/" className="flex items-center text-white gap-2 rounded-md px-3 py-2 font-helvetica transition-colors H-effect" style={{ textDecoration: 'underline' }}>
-                    <HomeIcon className="h-4 w-4" /> Home
-                </Link>
-                <Link to="/dashboard" className="flex text-white items-center gap-2 rounded-md px-3 py-2 font-helvetica transition-colors H-effect" style={{ textDecoration: 'none' }}>
-                    <UsersIcon className="h-4 w-4" /> Dashboard
-                </Link>
-                <Link to="/rewards" className="flex items-center text-white  gap-2 rounded-md px-3 py-2 font-helvetica transition-colors H-effect" style={{ textDecoration: 'none' }}>
-                    <GiftIcon className="h-4 w-4" /> Rewards
-                </Link>
-                {username ? (
-                    <Link to="/login" onClick={logOut} className="flex text-white items-center gap-2 rounded-md px-3 py-2 font-helvetica transition-colors H-effect" style={{ textDecoration: 'none' }}>
-                        <LoutIcon className="h-4 w-4" /> Log out
-                    </Link>
-                ) : (
-                    <Link to="/login" className="flex text-white items-center gap-2 rounded-md px-3 py-2 font-helvetica transition-colors H-effect" style={{ textDecoration: 'none' }}>
-                        <LinIcon className="h-4 w-4" /> Log in
-                    </Link>
-                )}
-            </nav>
-            
-            <center>
-                <div className="Contact">
-                    <ConIcon className="h-4 w-4 inline" /> <a href="mailto:kevisbuffalo@gmail.com"> Contact </a>
-                </div>
-            </center>
-
-            <div className="absolute bottom-0 left-0 right-0 grid gap-4 rounded-lg bg-[#282434] p-4">
-                <div className="grid gap-1">
-                    <h3 className="text-sm font-bold font-helvetica">Your Referral Code:</h3>
-                    <div className="r-code flex items-center justify-between">
-                        <span className="text-sm font-medium font-helvetica">{code}</span>
-                        <button className="bg-transparent p-2 rounded-full" onClick={handleCopyReferralCode}>
-                            <CopyIcon id="copy-icon" className="h-4 w-4 H-effect" />
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </aside>
-        </>
-    );
-};
-
 const InviteLinkGeneration = () => {
-    const [inviteLink, setInviteLink] = useState('');
     const [error, setError] = useState('');
-    const {username} = useContext(UserContext);
+    let {username, inviteLink, setInviteLink} = useContext(UserContext);
     const effectRan = useRef(false);
     const navigateTo = useNavigate();
 
     useEffect(() => {
-        if (effectRan.current) return;
-        let existingLink = localStorage.getItem('inviteLink');
-        if (existingLink && existingLink.includes('invicon.lol')) existingLink = existingLink.replace('invicon.lol', 'invicon.netlify.app') // Because I am no long paying for the domain
-        if (existingLink) {
-            setInviteLink(existingLink);
-        } else {
-           const fetchInviteLink = async () => {
+        if (!username || inviteLink) return
+        if (inviteLink.includes('invicon.lol')) setInviteLink(inviteLink.replace('invicon.lol', 'invicon.netlify.app')) // Because I am no longer paying for the domain
+        
+        const fetchInviteLink = async () => {
             try {
                 const response = await axios.post('https://invicon-server-x4ff.onrender.com/generate-invite', {username});
                 setInviteLink(response.data.inviteLink);
@@ -132,10 +42,10 @@ const InviteLinkGeneration = () => {
                 setError('Error generating invite link');
                 console.error('Error generating invite link:', error);
             }
-        };
-        if (username) fetchInviteLink()
+        }
+        
+        fetchInviteLink()
         effectRan.current = true;
-      }
     }, [username]);
     
     const handleCopy = () => {
@@ -549,12 +459,12 @@ const Home = () => {
 
     return (
         <>
+        <Header />
         <InviteChecker />
 
         <div className="flex h-screen">
 
-            { !isPaymentConOpen && (<Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} inviteLink={inviteLink} />)}
-
+            <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} toast={toast} slide={Slide} />
             <main className="flex-1 space-y-6 p-8 overflow-auto" style={darkMode ? darkModeStyles : lightModeStyles}>
                 <div
                     className="Top-bar flex px-3 mb-5 items-center justify-between"

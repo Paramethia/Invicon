@@ -1,22 +1,23 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './Home';
-import Login from './Login';
-import Register from './Register';
-import RequestPasswordReset from './RequestPasswordReset';
-import ResetPassword from './ResetPassword';
-import Dashboard from './Dashboard';
-import Rewards from './Rewards';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import RequestPasswordReset from './pages/RequestPasswordReset';
+import ResetPassword from './pages/ResetPassword';
+import Dashboard from './pages/Dashboard';
+import Rewards from './pages/Rewards';
 import { UserContext } from './UserContext';
 
 function App() {
 	const [username, setName] = useState(localStorage.getItem('username') || '');
 	const [email, setEmail] = useState(localStorage.getItem('email') || '');
+	const [inviteLink, setInviteLink] = useState(localStorage.getItem("inviteLink"), null)
 	const dark = useState(localStorage.getItem("darkMode") || "true");
 	const [darkMode, setDarkMode] = useState(dark[0] === "false" ? false : true);
 
 	return (
-		<UserContext.Provider value={{ username, setName, email, setEmail, darkMode, setDarkMode }}>
+		<UserContext.Provider value={{ username, setName, email, setEmail, inviteLink, setInviteLink, darkMode, setDarkMode }}>
 			<Router>
 				<Routes>
 					<Route path="/" element={<Home />} />

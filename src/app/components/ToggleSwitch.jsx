@@ -1,10 +1,10 @@
 import { FaMoon, FaSun } from 'react-icons/fa';
-import './Stylings/Extra styles.css';
+import '../Stylings/Extra styles.css';
 
 const ToggleSwitch = ({ isDarkMode, toggleTheme }) => {
 	return (
 		<div className='bg-dark flex relative px-3 mb-5' style={{ backgroundColor: "#101424", left: 0, padding: "10px", borderRadius: "5px" }}>
-			<div className=" absolute top-4 px-3 right-4">
+			<div className="absolute top-4 px-3 right-4">
 				<label className="switch">
 					<input type="checkbox" checked={isDarkMode} onChange={toggleTheme} />
 					<span className="slider round">

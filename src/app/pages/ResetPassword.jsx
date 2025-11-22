@@ -50,6 +50,7 @@ const ResetPassword = () => {
         <>
         <Header />
         <ToastContainer />
+        
         <div className="flex  h-screen">
             <div className="hidden md:block md:w-1/2 bg-auto" style={{ backgroundImage: "url(https://res.cloudinary.com/dw7w2at8k/image/upload/v1720626946/Home_1_d6rirw.png)" }}></div>
             <div className="w-full md:w-1/2 flex flex-col items-center justify-center bg-gray-400">
