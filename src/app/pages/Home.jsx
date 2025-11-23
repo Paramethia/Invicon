@@ -382,7 +382,6 @@ const PaymentOptions = ({ open, username, selectedTier, availableTiers }) => {
 }
 
 const Home = () => {
-    const inviteLink = useState('');
     const {username, darkMode, setDarkMode} = useContext(UserContext);
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -460,6 +459,7 @@ const Home = () => {
     return (
         <>
         <Header />
+        <ToastContainer />
         <InviteChecker />
 
         <div className="flex h-screen">
@@ -467,24 +467,22 @@ const Home = () => {
             <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} toast={toast} slide={Slide} />
             <main className="flex-1 space-y-6 p-8 overflow-auto" style={darkMode ? darkModeStyles : lightModeStyles}>
                 <div
-                    className="Top-bar flex px-3 mb-5 items-center justify-between"
+                    className="Top-bar w-full flex px-3 mb-5 items-center justify-between"
                     style={{
                         backgroundColor: darkMode ? '#101424' : '#282434',
                         padding: '10px',
                         borderRadius: '5px',
                     }}
                 >
-                    <ToastContainer />
-                    
                     <div className={`ham-menu md:hidden left-12 z-50 ${isSidebarOpen ? 'hidden' : ''}`}>
                         <button onClick={toggleSidebar}>
                             <FaBars className="h-6 w-6 text-white" />
                         </button>
                     </div>
-                    <Link to="/home" style={{ textDecoration: 'none' }} className="Logo flex-1">
+                    <Link to="/" style={{ textDecoration: 'none' }} className="Logo flex-1">
                         <div className="text-white flex items-center gap-2 justify-center md:justify-start">
                             <img src="Invicon top bar logo.png" alt="Invicon Logo" className="w-8 h-8" />
-                            <h1 className="text-2xl font-bold font-helvetica">Invicon</h1>
+                            <h1 className="text-2xl font-bold font-helvetica"> Invicon </h1>
                         </div>
                     </Link>
                     <div className="Theme">

@@ -295,35 +295,36 @@ const Rewards = () => {
 		<div className="flex h-screen">
 			<Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} toast={toast} slide={Slide} />
 			<main className="flex-1 p-8 space-y-6 overflow-auto" style={darkMode ? darkModeStyles : lightModeStyles}>
-				<div className="Top-bar flex px-3 mb-5 items-center justify-between"
-					style={{
-						backgroundColor: darkMode ? '#101424' : '#282434',
-						padding: '10px',
-						borderRadius: '5px',
-					}}
-				>
-					<div className={`ham-menu md:hidden left-12 z-50 ${isSidebarOpen ? 'hidden' : ''}`}>
-						<button onClick={toggleSidebar}>
-							<FaBars className="h-6 w-6 text-white" />
-						</button>
-					</div>
-					<Link to="/home" style={{ textDecoration: 'none' }} className="Logo flex-1">
-						<div className="text-white flex items-center gap-2 justify-center md:justify-start">
-							<img src="https://res.cloudinary.com/dw7w2at8k/image/upload/v1721763323/00f6d818-53e4-43fd-819d-1efb5932af3c-removebg-preview_jwgmzt.png" alt="Invicon Logo" className="w-8 h-8" />
-							<h1 className="text-2xl font-bold font-helvetica">Invicon</h1>
-						</div>
-					</Link>
-					<div className="Theme">
-						<label className="switch">
-							<input type="checkbox" checked={darkMode} onChange={toggleTheme} />
-							<span className="slider round">
-								<span className="icon-container">
-									{darkMode ? <FaSun color="#fff" /> : <FaMoon color="#333" />}
-								</span>
-							</span>
-						</label>
-					</div>
-				</div>
+				<div
+                    className="Top-bar w-full flex px-3 mb-5 items-center justify-between"
+                    style={{
+                        backgroundColor: darkMode ? '#101424' : '#282434',
+                        padding: '10px',
+                        borderRadius: '5px',
+                    }}
+                >
+                    <div className={`ham-menu md:hidden left-12 z-50 ${isSidebarOpen ? 'hidden' : ''}`}>
+                        <button onClick={toggleSidebar}>
+                            <FaBars className="h-6 w-6 text-white" />
+                        </button>
+                    </div>
+                    <Link to="/" style={{ textDecoration: 'none' }} className="Logo flex-1">
+                        <div className="text-white flex items-center gap-2 justify-center md:justify-start">
+                            <img src="Invicon top bar logo.png" alt="Invicon Logo" className="w-8 h-8" />
+                            <h1 className="text-2xl font-bold font-helvetica"> Invicon </h1>
+                        </div>
+                    </Link>
+                    <div className="Theme">
+                        <label className="switch">
+                            <input type="checkbox" checked={darkMode} onChange={toggleTheme} />
+                            <span className="slider round">
+                                <span className="icon-container">
+                                    {darkMode ? <FaSun color="#fff" /> : <FaMoon color="#333" />}
+                                </span>
+                            </span>
+                        </label>
+                    </div>
+                </div>
 
 				<h1 className="text-center dark:text-gray-300 text-gray-700 text-4xl" style={{ color: darkMode ? '#ffffff' : '#1a202c' }}>
 					Rewards claim
