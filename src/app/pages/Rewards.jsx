@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-import { toast, ToastContainer, Slide } from 'react-toastify';
+import { toast, ToastContainer, Slide, Flip } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { FaMoon, FaSun, FaBars, FaPaypal, FaWallet, FaTimesCircle } from 'react-icons/fa';
 import '../Stylings/Extra styles.css';

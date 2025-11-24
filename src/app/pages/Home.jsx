@@ -105,7 +105,7 @@ const InviteChecker = () => {
             const response = await axios.post(`https://invicon-server-x4ff.onrender.com/invite-check`, { username, inviteId });
             if (response.data.message === "Invalid invite code.") {
                 console.error("Error:", response.data.message);
-            } else if (response.data.message === "Code found and updated invites for inviter.") {
+            } else if (response.data.message === "Code found and updated data.") {
                 console.log("Invite code found.");
                 localStorage.removeItem("usedInvite");
             }
@@ -116,7 +116,6 @@ const InviteChecker = () => {
 
     useEffect(() => {
         ping()
-
         
         if (username && inviteId) {
             check()
@@ -456,7 +455,6 @@ const Home = () => {
         <InviteChecker />
 
         <div className="flex h-screen">
-
             <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} toast={toast} slide={Slide} />
             <main className="flex-1 space-y-6 p-8 overflow-auto" style={darkMode ? darkModeStyles : lightModeStyles}>
                 <div
