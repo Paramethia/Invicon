@@ -12,12 +12,12 @@ import { UserContext } from './UserContext';
 function App() {
 	const [username, setName] = useState(localStorage.getItem('username') || '');
 	const [email, setEmail] = useState(localStorage.getItem('email') || '');
-	const [inviteLink, setInviteLink] = useState(localStorage.getItem("inviteLink"), null)
+	const [inviteId, setInviteId] = useState(localStorage.getItem("inviteId"), null)
 	const dark = useState(localStorage.getItem("darkMode") || "true");
 	const [darkMode, setDarkMode] = useState(dark[0] === "false" ? false : true);
 
 	return (
-		<UserContext.Provider value={{ username, setName, email, setEmail, inviteLink, setInviteLink, darkMode, setDarkMode }}>
+		<UserContext.Provider value={{ username, setName, email, setEmail, inviteId, setInviteId, darkMode, setDarkMode }}>
 			<Router>
 				<Routes>
 					<Route path="/" element={<Home />} />

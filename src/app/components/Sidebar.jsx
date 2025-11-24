@@ -7,20 +7,17 @@ import { FaTimes } from 'react-icons/fa';
 import '../Stylings/Extra styles.css';
 
 export default function Sidebar ({ isOpen, toggleSidebar, toast, slide }) {
-    const { username, inviteLink } = useContext(UserContext);
-    let code = "";
+    const { username, inviteId } = useContext(UserContext);
 
     const location = useLocation();
     const currentPage = location.pathname;
-    
-    if (inviteLink) code = inviteLink.slice(-8);
 
-    const logOut = () => { localStorage.removeItem('username') }
+    const logOut = () => { localStorage.removeItem(":username") }
 
     const handleCopyReferralCode = () => {
-        navigator.clipboard.writeText(inviteLink);
+        navigator.clipboard.writeText(inviteId);
         toast.success('Copied to clipboard! 🗒️', {
-           position: "top-center",
+            position: "top-center",
             autoClose: 2800,
             hideProgressBar: true,
             closeOnClick: false,
@@ -76,12 +73,12 @@ export default function Sidebar ({ isOpen, toggleSidebar, toast, slide }) {
                 </div>
             </center>
             
-            {inviteLink && code && 
+            {inviteId && 
                 <div className="absolute bottom-0 left-0 right-0 grid gap-4 rounded-lg bg-[#282434] p-4">
                     <div className="grid gap-1">
                         <h3 className="text-sm font-bold font-helvetica">Your Referral Code:</h3>
                         <div className="r-code flex items-center justify-between">
-                            <span className="text-sm font-medium font-helvetica">{code}</span>
+                            <span className="text-sm font-medium font-helvetica">{inviteId}</span>
                             <button className="bg-transparent p-2 rounded-full" onClick={handleCopyReferralCode}>
                                 <CopyIcon id="copy-icon" className="h-4 w-4 H-effect" />
                             </button>

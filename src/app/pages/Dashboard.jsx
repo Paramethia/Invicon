@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useRef } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { Helmet } from "react-helmet";
 import axios from 'axios';
 import { UserContext } from '../UserContext';
@@ -24,33 +24,34 @@ const Dashboard = () => {
     const darkModeStyles = { backgroundColor: '#101424' };
     const lightModeStyles = { backgroundColor: '#ffffff' };
 
-    const effectRan = useRef(false);
-    useEffect(() => {
-        if (effectRan.current) return;
-        const fetchInvitees = async () => {
-            try {
-                const response = await axios.post('https://invicon-server-x4ff.onrender.com/invites', { username });
-                if (response.data.message === "No invites yet.") {
-                    setInvitees([]);
-                } else {
-                    setInvitees(response.data.invitees || []);
-                }
-            } catch (error) {
-                console.error("Error fetching invitees:", error);
+    const fetchInvitees = async () => {
+        try {
+            console.log("Fetching invitees...");
+            const response = await axios.post('https://invicon-server-x4ff.onrender.com/invites', { username });
+            if (response.data.message === "No invites yet.") {
+                setInvitees([]);
+                console.log("No invites found")
+            } else {
+                setInvitees(response.data.invitees || []);
+                console.log("Invitees fetched");
             }
+
+        } catch (error) {
+            console.error("Error fetching invitees:", error);
         }
-        if (username) fetchInvitees();
-        effectRan.current = true;
-    }, []);
+    }
+    useEffect(() => {
+        if (username) {
+            fetchInvitees();
+        }
+    }, [username]);
 
     const toggleTheme = () => { 
         setDarkMode(!darkMode);
         localStorage.setItem("darkMode", !darkMode);
     }
 
-    const toggleSidebar = () => {
-        setIsSidebarOpen(!isSidebarOpen);
-    };
+    const toggleSidebar = () => { setIsSidebarOpen(!isSidebarOpen) }
 
     return (
         <>
@@ -108,6 +109,7 @@ const Dashboard = () => {
                                         <span className="font-medium">{invitee.username}</span>
                                     </div>
                                 </div>
+                                <div className="text-gray-500 dark:text-gray-400 text-sm">{new Date(invitee.joinedOn).toDateString()}</div>
                             </div>
                         ))
                     ) : (

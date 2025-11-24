@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect, useRef } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import { Helmet } from "react-helmet";
 import { Link} from 'react-router-dom';
@@ -23,33 +23,28 @@ const Header = () => {
     );
 };
 
-const InviteLinkGeneration = () => {
+const InviteLink = () => {
     const [error, setError] = useState('');
-    let {username, inviteLink, setInviteLink} = useContext(UserContext);
-    const effectRan = useRef(false);
+    const {username, inviteId, setInviteId} = useContext(UserContext);
     const navigateTo = useNavigate();
 
-    useEffect(() => {
-        if (!username || inviteLink) return
-        if (inviteLink.includes('invicon.lol')) setInviteLink(inviteLink.replace('invicon.lol', 'invicon.netlify.app')) // Because I am no longer paying for the domain
+    async function generateNewInviteId() {
+        if (!username || inviteId) return
         
-        const fetchInviteLink = async () => {
-            try {
-                const response = await axios.post('https://invicon-server-x4ff.onrender.com/generate-invite', {username});
-                setInviteLink(response.data.inviteLink);
-                localStorage.setItem('inviteLink', response.data.inviteLink);
-            } catch (error) {
-                setError('Error generating invite link');
-                console.error('Error generating invite link:', error);
-            }
+        try {
+            const response = await axios.post('https://invicon-server-x4ff.onrender.com/new-inviteId', {username});
+            setInviteId(response.data.newInviteId);
+            localStorage.setItem('inviteId', response.data.newInviteId);
+        } catch (error) {
+            setError('Error generating invite link');
+            console.error('Error generating invite link:', error);
         }
-        
-        fetchInviteLink()
-        effectRan.current = true;
-    }, [username]);
+    }
+
+    generateNewInviteId();
     
     const handleCopy = () => {
-        navigator.clipboard.writeText(inviteLink);
+        navigator.clipboard.writeText(`https://invicon.netlify.app/register?inviteId=${inviteId}`);
         toast.success('Copied to clipboard! 🗒️', {
             position: "top-center",
             autoClose: 2800,
@@ -75,7 +70,7 @@ const InviteLinkGeneration = () => {
                     { !error && (
                     <>
                     <div onClick={handleCopy} className="Link bg-gray-200 dark:bg-gray-800 rounded-md px-2 md:px-4 py-2 md:text-lg font-medium text-gray-700 dark:text-white">
-                        {inviteLink} 
+                        {`https://invicon.netlify.app/register?inviteId=${inviteId}`} 
                     </div>
                     <button id="copyB" onClick={handleCopy}>
                         Copy
@@ -97,7 +92,6 @@ const InviteLinkGeneration = () => {
 const InviteChecker = () => {
     const inviteId = localStorage.getItem("usedInvite");
     const {username} = useContext(UserContext);
-    const effectRan = useRef(false);
 
     if (inviteId === "null") return
 
@@ -105,30 +99,29 @@ const InviteChecker = () => {
         await fetch('https://invicon-server-x4ff.onrender.com/ping').then(() => console.log("Server awake")).catch(() => console.warn("Could not connect to server"))
     }
 
+    const check = async () => {
+        console.log("Finding invite code...")
+        try {
+            const response = await axios.post(`https://invicon-server-x4ff.onrender.com/invite-check`, { username, inviteId });
+            if (response.data.message === "Invalid invite code.") {
+                console.error("Error:", response.data.message);
+            } else if (response.data.message === "Code found and updated invites for inviter.") {
+                console.log("Invite code found.");
+                localStorage.removeItem("usedInvite");
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
     useEffect(() => {
-        if (effectRan.current) return;
         ping()
 
-        if (username) {
-            const check = async () => {
-                console.log("Finding invite code...")
-                try {
-                    const response = await axios.post(`https://invicon-server-x4ff.onrender.com/invite-check`, { username, inviteId });
-                    if (response.data.message === "Invalid invite code.") {
-                        console.error("Error:", response.data.message);
-                    } else if (response.data.message === "Code found and updated invites for inviter.") {
-                        console.log("Invite code found.");
-                        localStorage.removeItem("usedInvite");
-                    }
-                } catch (err) {
-                    console.error(err);
-                }
-            };
-
-            if (inviteId) check()
-            effectRan.current = true;
+        
+        if (username && inviteId) {
+            check()
         }
-    }, []);
+    }, [username]);
 };
 
 const PaymentOptions = ({ open, username, selectedTier, availableTiers }) => {
@@ -507,7 +500,7 @@ const Home = () => {
                     </p>
                 </div> 
                 <div className="max-w-3xl mx-auto grid gap-6">
-                    <InviteLinkGeneration />
+                    <InviteLink />
                     <div className="Stats bg-white dark:bg-gray-800 shadow rounded-lg p-6">
                         { loading ? (
                            <>

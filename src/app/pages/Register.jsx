@@ -40,7 +40,9 @@ const Register = () => {
     
     // To check if the user already has an account on the device to prevent creating and inviting multiple acccounts on the same device/browser.
 
-    const alreadyReg = localStorage.getItem("username") || localStorage.getItem("inviteLink");
+    if (localStorage.getItem("inviteLink")) localStorage.removeItem("inviteLink"); // Remove the old inviteLink storage variable
+
+    const alreadyReg = localStorage.getItem("username") || localStorage.getItem("inviteId");
     let [warning, setWarning] = useState("");
 
     const togglePasswordVisibility = () => {
@@ -110,6 +112,7 @@ const Register = () => {
                 } else if (response.data === "Registered.") {
                     localStorage.setItem('usedInvite', usedInvite);
                     localStorage.setItem("username", username);
+                    if (localStorage.getItem("inviteId")) localStorage.removeItem("inviteId");
                     if (email) localStorage.setItem("email", email);
                     navigate('/');
                 }
