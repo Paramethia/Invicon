@@ -116,10 +116,7 @@ const InviteChecker = () => {
 
     useEffect(() => {
         ping()
-        
-        if (username && inviteId) {
-            check()
-        }
+        if (username && inviteId) check()
     }, [username]);
 };
 
@@ -439,10 +436,10 @@ const Home = () => {
     };
 
     const availableTiers = [
-        { tier: 'Tier 1', invites: 5, price: 4 },
-        { tier: 'Tier 2', invites: 10, price: 8 },
-        { tier: 'Tier 3', invites: 20, price: 14 },
-        { tier: 'Tier 4', invites: 35, price: 20 }
+        { tier: 'Tier 1', invites: 5, price: 3 },
+        { tier: 'Tier 2', invites: 10, price: 5 },
+        { tier: 'Tier 3', invites: 20, price: 8 },
+        { tier: 'Tier 4', invites: 35, price: 14 }
     ];
 
     // Filter out the tiers that the user has already unlocked
@@ -584,7 +581,7 @@ const Home = () => {
                             <li className={`${ darkMode ? "text-gray-300" : "text-gray-700"}`}> 8GB+ folder </li>
                         </ul>
                         )}
-                        {showAllT && <h2 className="text-2xl text center text-gray-500" style={{ color: darkMode ? '#ffffff' : '#1a202c' }}> Three tier: </h2> }
+                        {showAllT && <h2 className="text-2xl text center text-gray-500" style={{ color: darkMode ? '#ffffff' : '#1a202c' }}> Third tier: </h2> }
                         {(selectedTier === "Tier 3" || showAllT) && (
                         <ul>
                             <li className={`${ darkMode ? "text-gray-300" : "text-gray-700"}`}> Tier 1 & 2 rewards </li>
