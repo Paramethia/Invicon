@@ -7,17 +7,19 @@ import RequestPasswordReset from './pages/RequestPasswordReset';
 import ResetPassword from './pages/ResetPassword';
 import Dashboard from './pages/Dashboard';
 import Rewards from './pages/Rewards';
+import Admin from './pages/Admin';
 import { UserContext } from './UserContext';
 
 function App() {
 	const [username, setName] = useState(localStorage.getItem('username') || '');
+	const admin = "Kyrin";
 	const [email, setEmail] = useState(localStorage.getItem('email') || '');
 	const [inviteId, setInviteId] = useState(localStorage.getItem("inviteId"), null)
 	const dark = useState(localStorage.getItem("darkMode") || "true");
 	const [darkMode, setDarkMode] = useState(dark[0] === "false" ? false : true);
 
 	return (
-		<UserContext.Provider value={{ username, setName, email, setEmail, inviteId, setInviteId, darkMode, setDarkMode }}>
+		<UserContext.Provider value={{ username, setName, admin, email, setEmail, inviteId, setInviteId, darkMode, setDarkMode }}>
 			<Router>
 				<Routes>
 					<Route path="/" element={<Home />} />
@@ -27,6 +29,7 @@ function App() {
 					<Route path="/request" element={<RequestPasswordReset />} />
 					<Route path="/dashboard" element={<Dashboard />} />
 					<Route path="/rewards" element={<Rewards />} />
+					<Route path="/admin" element={<Admin />} />
 				</Routes>
 			</Router>
 		</UserContext.Provider>

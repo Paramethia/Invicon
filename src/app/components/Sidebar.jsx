@@ -3,16 +3,15 @@ import { useLocation } from 'react-router-dom';
 import { UserContext } from '../UserContext';
 import { Link } from 'react-router-dom';
 import { FiHome as HomeIcon, FiGift as GiftIcon, FiUsers as UsersIcon, FiMail as ConIcon, FiLogOut as LoutIcon, FiLogIn as LinIcon, FiCopy as CopyIcon } from 'react-icons/fi';
-import { FaTimes } from 'react-icons/fa';
+import { FaTimes, FaUserTie as Admin } from 'react-icons/fa';
 import '../Stylings/Extra styles.css';
 
 export default function Sidebar ({ isOpen, toggleSidebar, toast, slide }) {
-    const { username, inviteId } = useContext(UserContext);
-
+    const { username, admin, inviteId } = useContext(UserContext);
     const location = useLocation();
     const currentPage = location.pathname;
 
-    const logOut = () => { localStorage.removeItem(":username") }
+    const logOut = () => { localStorage.removeItem("username") }
 
     const handleCopyReferralCode = () => {
         navigator.clipboard.writeText(inviteId);
@@ -56,6 +55,11 @@ export default function Sidebar ({ isOpen, toggleSidebar, toast, slide }) {
                 <Link to="/rewards" className="flex items-center text-white  gap-2 rounded-md px-3 py-2 font-helvetica transition-colors H-effect" style={{ textDecoration: currentPage === "/rewards" ? 'underline' : 'none' }}>
                     <GiftIcon className="h-4 w-4" /> Rewards
                 </Link>
+                {username === admin &&
+                    <Link to="/admin" className="flex items-center text-white  gap-2 rounded-md px-3 py-2 font-helvetica transition-colors H-effect" style={{ textDecoration: currentPage === "/admin" ? 'underline' : 'none' }}>
+                        <Admin className="h-4 w-4" /> Admin
+                    </Link>
+                }
                 {username ? (
                     <Link to="/login" onClick={logOut} className="flex text-white items-center gap-2 rounded-md px-3 py-2 font-helvetica transition-colors H-effect" style={{ textDecoration: 'none' }}>
                         <LoutIcon className="h-4 w-4" /> Log out
