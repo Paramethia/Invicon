@@ -80,7 +80,7 @@ const InviteLink = () => {
                     </>
                 ) : (
                     <>
-                    <p id="No-login" className="text-sm"> You need to be signed in to generate a link </p>
+                    <p id="No-login" className="text-sm"> You need to be logged in to generate a link </p>
                     <button id="loginB" onClick={() => navigateTo('/login')}> Log in </button>
                     </>
                 )}
@@ -499,7 +499,7 @@ const Home = () => {
                     <div className="Stats bg-white dark:bg-gray-800 shadow rounded-lg p-6">
                         { loading ? (
                            <>
-                            <h2 className="text-xl font-semibold text-gray-700 dark:text-white"> { username ? "Waiting for server response..." : "Sign in to get your stats."} </h2>
+                            <h2 className="text-xl font-semibold text-gray-700 dark:text-white"> { username ? "Waiting for server response..." : "Log in to get your stats."} </h2>
                             <center>
                                 <div className="loader"></div>
                             </center>
