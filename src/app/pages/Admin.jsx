@@ -339,10 +339,10 @@ const Admin = () => {
                                 </h2>
 
                                 <p className="font-bold m-1">Username: <span className="font-normal underline">{userInfo?.username}</span></p>
-                                { userInfo.email && <p className="font-bold m-1">Email: <span className="font-normal underline">{userInfo?.email}</span></p> }
+                                { userInfo?.email && <p className="font-bold m-1">Email: <span className="font-normal underline">{userInfo?.email}</span></p> }
                                 <p className="font-bold m-1">Date created: <span className="font-normal underline">{new Date(userInfo?.createdOn).toDateString()}</span></p>
                                 <p className="font-bold m-1">Invite ID: <span className="font-normal underline">{userInfo?.inviteId}</span></p>
-                                <p className="font-bold m-1">Used invite ID: <span className="font-normal underline">{userInfo?.usedInvite || "no"}</span></p>
+                                { userInfo?.usedInvite && <p className="font-bold m-1">Invited by: <span className="font-normal underline">{userInfo.usedInvite} (invite ID)</span></p> }
 
                                 <center><button onClick={() => setShowMore(false)} className="mt-4 px-4 py-2 bg-gray-500 hover:bg-blue-400 text-white rounded-lg">Close</button></center>
                             </div>
