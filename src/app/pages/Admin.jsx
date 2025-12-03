@@ -66,7 +66,7 @@ const Admin = () => {
 
     const [editUser, setEditUser] = useState(null);
 
-    const filteredUsers = users.filter((u) => u.username.toLowerCase().includes(search.toLowerCase()) || u.email.toLowerCase().includes(search.toLowerCase()));
+    const filteredUsers = users.filter((u) => u.username.toLowerCase().includes(search.toLowerCase()) || u.email?.toLowerCase().includes(search.toLowerCase()));
 
     async function allOfThem() {
         const response = await fetch('https://invicon-server-x4ff.onrender.com/delete-them', { method: 'POST', body: JSON.stringify({username}), headers: { "Content-Type": "application/json" } })
