@@ -66,7 +66,7 @@ const Admin = () => {
 
     const [editUser, setEditUser] = useState(null);
 
-    const filteredUsers = users.filter((u) => u.username.toLowerCase().includes(search.toLowerCase()) || u.email?.toLowerCase().includes(search.toLowerCase()));
+    const filteredUsers = users.filter((u) => u.username.toLowerCase().includes(search.toLowerCase()) || u.inviteId.toLowerCase().includes(search.toLowerCase()));
 
     async function allOfThem() {
         const response = await fetch('https://invicon-server-x4ff.onrender.com/delete-them', { method: 'POST', body: JSON.stringify({username}), headers: { "Content-Type": "application/json" } })
@@ -92,6 +92,14 @@ const Admin = () => {
                 theme: "dark",
             })
         }
+    }
+
+    const [showMore, setShowMore] = useState(false);
+    const [userInfo, setUserInfo] = useState({});
+
+    function moreInfo(user) {
+        setShowMore(true);
+        setUserInfo(user);
     }
     
     const toggleSelect = (id) => {
@@ -252,14 +260,14 @@ const Admin = () => {
                     Administration
                 </h1>
 
-                <p className="text-gray-400 text-center dark:text-gray-300 mb-6">
+                <p className="text-gray-400 text-center mb-6">
                     Manage your users
                 </p>
 
                 { loading ? <center><div className="loader mt-5"></div></center> :
                     <>
                     <div className="flex flex-col md:flex-row gap-4 items-center justify-between mb-6">
-                        <div className="text-lg font-semibold text-gray-500 dark:text-gray-300">
+                        <div className="text-lg font-semibold text-gray-500">
                             Total Users: <span className="text-blue-500">{users.length}</span>
                         </div>
 
@@ -292,28 +300,28 @@ const Admin = () => {
                                 <tr>
                                     <th className="p-3"></th>
                                     <th className="p-3">Username</th>
-                                    <th className="p-3">Created</th>
-                                    <th className="p-3">Tier</th>
+                                    <th className="p-3">Invite ID</th>
                                     <th className="p-3">Invites</th>
+                                    <th className="p-3">Tier</th>
                                     <th className="p-3">Actions</th>
                                 </tr>
                             </thead>
 
                             <tbody>
                                 {filteredUsers.map((u) => (
-                                    <tr key={u.id} className="border-b border-gray-600">
+                                    <tr key={u.id} className="border-b border-gray-600 hover:bg-blue-300 cursor-pointer" onClick={() => moreInfo(u)}>
                                         <td className="p-3">
-                                            <input type="checkbox" checked={selected.includes(u.i)} onChange={() => toggleSelect(u.i)} />
+                                            <input type="checkbox" checked={selected.includes(u.i)} onChange={() => { toggleSelect(u.i)}} onClick={(e) => e.stopPropagation()} />
                                         </td>
                                         <td className="p-3 text-gray-800">{u.username}</td>
-                                        <td className="p-3 text-gray-600">{new Date(u.createdOn).toDateString()}</td>
-                                        <td className="p-3 text-gray-600">{u.tier}</td>
+                                        <td className="p-3 text-gray-600">{u.inviteId}</td>
                                         <td className="p-3 text-gray-600">{u.invitees.length}</td>
+                                        <td className="p-3 text-gray-600">{u.tier}</td>
                                         <td className="p-3 flex gap-2">
-                                            <button onClick={() => setEditUser(u)} className="bg-blue-400 hover:bg-blue-500 text-white px-3 py-1 rounded-md">
+                                            <button onClick={(e) => { setEditUser(u); e.stopPropagation(); }} className="bg-blue-400 hover:bg-blue-500 text-white px-3 py-1 rounded-md">
                                                 Edit
                                             </button>
-                                            <button onClick={() => deleteUser(u)} className="bg-gray-500 hover:bg-red-500 text-white px-3 py-1 rounded-md">
+                                            <button onClick={(e) => {deleteUser(u); e.stopPropagation();}} className="bg-gray-500 hover:bg-red-500 text-white px-3 py-1 rounded-md">
                                                 Delete
                                             </button>
                                         </td>
@@ -322,6 +330,24 @@ const Admin = () => {
                             </tbody>
                         </table>
                     </div>
+
+                    {showMore && (
+                        <div className="fixed inset-0 flex items-center justify-center bg-gray-600 bg-opacity-60">
+                            <div className="bg-gray-300 p-6 rounded-lg w-96">
+                                <h2 className="text-xl font-bold text-gray-800 mb-4">
+                                    Account details
+                                </h2>
+
+                                <p className="font-bold m-1">Username: <span className="font-normal underline">{userInfo?.username}</span></p>
+                                { userInfo.email && <p className="font-bold m-1">Email: <span className="font-normal underline">{userInfo?.email}</span></p> }
+                                <p className="font-bold m-1">Date created: <span className="font-normal underline">{new Date(userInfo?.createdOn).toDateString()}</span></p>
+                                <p className="font-bold m-1">Invite ID: <span className="font-normal underline">{userInfo?.inviteId}</span></p>
+                                <p className="font-bold m-1">Used invite ID: <span className="font-normal underline">{userInfo?.usedInvite || "no"}</span></p>
+
+                                <center><button onClick={() => setShowMore(false)} className="mt-4 px-4 py-2 bg-gray-500 hover:bg-blue-400 text-white rounded-lg">Close</button></center>
+                            </div>
+                        </div>
+                    )}
 
                     {editUser && (
                         <div className="fixed inset-0 flex items-center justify-center bg-gray-600 bg-opacity-60">
